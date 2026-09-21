@@ -1,0 +1,141 @@
+[
+  {
+    "id": 1,
+    "question": "What was the company's revenue?",
+    "type": "factual",
+    "expected_pages": [36, 71],
+    "answer": "Microsoft's total revenue was $281,724 million in fiscal year 2025, compared with $245,122 million in fiscal year 2024 and $211,915 million in fiscal year 2023."
+  },
+  {
+    "id": 2,
+    "question": "What was the company's revenue in fiscal year 2025?",
+    "type": "factual",
+    "expected_pages": [36],
+    "answer": "Microsoft's total revenue in fiscal year 2025 was $281,724 million."
+  },
+  {
+    "id": 3,
+    "question": "How did revenue change compared with the previous fiscal year?",
+    "type": "comparison",
+    "expected_pages": [36],
+    "answer": "Revenue increased from $245,122 million in fiscal year 2024 to $281,724 million in fiscal year 2025, an increase of approximately 15%."
+  },
+  {
+    "id": 4,
+    "question": "What business segments are discussed in the document?",
+    "type": "factual",
+    "expected_pages": [22],
+    "answer": "Microsoft reports three business segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing."
+  },
+  {
+    "id": 5,
+    "question": "What was the company's operating income?",
+    "type": "factual",
+    "expected_pages": [36],
+    "answer": "Microsoft's operating income was $128,528 million in fiscal year 2025, compared with $109,433 million in fiscal year 2024 and $88,523 million in fiscal year 2023."
+  },
+  {
+    "id": 6,
+    "question": "What was the company's net income?",
+    "type": "factual",
+    "expected_pages": [36],
+    "answer": "Microsoft's net income was $101,832 million in fiscal year 2025, compared with $88,136 million in fiscal year 2024 and $72,361 million in fiscal year 2023."
+  },
+  {
+    "id": 7,
+    "question": "What was the company's total assets?",
+    "type": "factual",
+    "expected_pages": [38],
+    "answer": "Microsoft's total assets were $619,003 million as of June 30, 2025, compared with $512,163 million as of June 30, 2024."
+  },
+  {
+    "id": 8,
+    "question": "What was the company's total cash and cash equivalents?",
+    "type": "factual",
+    "expected_pages": [39],
+    "answer": "Microsoft had $30,242 million in cash and cash equivalents at June 30, 2025, compared with $18,315 million at June 30, 2024."
+  },
+  {
+    "id": 9,
+    "question": "What are the main risks identified in the document?",
+    "type": "summary",
+    "expected_pages": [10, 33, 35],
+    "answer": "The document identifies risks including foreign exchange, interest rate, credit, and equity price risks, along with legal, tax, regulatory, and other business risks."
+  },
+  {
+   "id": 10,
+   "question": "What does the document say about research and development?",
+   "type": "factual",
+   "expected_pages": [17],
+   "answer": "Microsoft makes significant investments in research and development for new and existing products, services, and technologies, and plans to continue investing across operating segments."
+  },
+  {
+    "id": 11,
+    "question": "Compare the company's revenue across two fiscal years.",
+    "type": "comparison",
+    "expected_pages": [36],
+    "answer": "Revenue increased from $245,122 million in fiscal year 2024 to $281,724 million in fiscal year 2025, an increase of approximately 15%."
+  },
+  {
+     "id": 12,
+  "question": "What were Microsoft's revenue, operating income, and net income in fiscal year 2025?",
+  "type": "summary",
+  "expected_pages": [36],
+  "answer": "In fiscal year 2025, Microsoft reported revenue of $281,724 million, operating income of $128,528 million, and net income of $101,832 million."
+},
+  {
+    "id": 13,
+  "question": "What does the document say about employees?",
+  "type": "factual",
+  "expected_pages": [16],
+  "answer": "The document provides information about Microsoft's employees, including its total workforce and the number of employees in the United States and internationally."},
+  {
+    "id": 14,
+  "question": "What does the document say about competition?",
+  "type": "factual",
+  "expected_pages": [13],
+  "answer": "Microsoft describes competition across its products and businesses, including competition for Office, Windows, Microsoft Defender, Enterprise Mobility + Security, LinkedIn, and Dynamics."
+},
+  {
+    "id": 15,
+    "question": "What does the document say about artificial intelligence?",
+    "type": "factual",
+    "expected_pages": [6],
+    "answer": "The report describes AI as a major strategic priority for Microsoft and discusses AI innovation across cloud and AI infrastructure, Copilots, agents, products, and services."
+  },
+  {
+    "id": 16,
+    "question": "What does the document say about cybersecurity?",
+    "type": "factual",
+    "expected_pages": [4, 6],
+    "answer": "Microsoft identifies security as a top priority and describes its Secure Future Initiative, security investments, threat detection and response, identity protection, and secure-by-design practices."
+  },
+  {
+    "id": 17,
+    "question": "What does the document say about cloud services?",
+    "type": "factual",
+    "expected_pages": [13, 22],
+    "answer": "Microsoft describes its cloud business as a core part of its strategy, including Azure, Microsoft Cloud, cloud-based services, datacenters, and intelligent cloud capabilities."
+  },
+  {
+    "id": 18,
+    "question": "What was the company's revenue in 2035?",
+    "type": "unanswerable",
+    "expected_pages": [],
+    "answer": "The document does not provide revenue information for fiscal year 2035."
+  },
+  {
+    "id": 19,
+    "question": "Who will win the FIFA World Cup in 2030?",
+    "type": "unanswerable",
+    "expected_pages": [],
+    "answer": "The document does not contain information that can answer this question."
+  },
+  {
+    "id": 20,
+    "question": "What is the weather in Hyderabad today?",
+    "type": "unanswerable",
+    "expected_pages": [],
+    "answer": "The document does not contain weather information for Hyderabad."
+  }
+]

@@ -1,0 +1,83 @@
+# =====================================================
+# Environment / Secrets
+# =====================================================
+
+.env
+.env.*
+!.env.example
+
+# =====================================================
+# Python
+# =====================================================
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# =====================================================
+# AI Layer Runtime Data
+# =====================================================
+
+ai-layer/data/uploads/
+ai-layer/data/indexes/
+
+# =====================================================
+# Evaluation Runtime Outputs
+# =====================================================
+
+evaluation/live_results.json
+evaluation/evaluation_results.json
+
+# Temporary diagnostic outputs
+evaluation/diagnose_case3.py
+
+# =====================================================
+# Node / Frontend
+# =====================================================
+
+node_modules/
+dist/
+build/
+.vite/
+
+# Frontend environment files
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# =====================================================
+# OS / IDE
+# =====================================================
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+# =====================================================
+# Logs
+# =====================================================
+
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# =====================================================
+# Temporary files
+# =====================================================
+
+*.tmp
+*.temp
+*.swp
