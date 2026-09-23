@@ -1,2462 +1,1312 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+
 import "./App.css";
 
-
-type Source = {
-  source_file?: string;
-  chunk_id?: string;
-  page?: number | null;
-  page_number?: number | null;
-  score?: number;
-  text?: string;
-};
-
-
-type UploadedDocument = {
-  id: string;
-  name: string;
-  pages: number;
-  chunks: number;
-};
-
-
-type Message = {
-  id: number;
-  role: "user" | "assistant";
-  content: string;
-  timestamp: Date;
-  sources?: Source[];
-  documentUpload?: UploadedDocument;
-};
-
-
-const API_BASE_URL =
-  "http://localhost:5001/api";
-
-
-function formatTime(date: Date) {
-  return date.toLocaleTimeString([], {
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
-
-
-function getSourcePage(source: Source) {
-  return source.page_number ?? source.page ?? null;
-}
-
+import { CommandBar } from "./components/CommandBar";
+import { DocumentRail } from "./components/DocumentRail";
+import { EmptyState } from "./components/EmptyState";
+import { EvidencePanel } from "./components/EvidencePanel";
+import { IngestCinematic } from "./components/IngestCinematic";
+import { ReasoningLattice } from "./components/ReasoningLattice";
+import { CountUp } from "./components/CountUp";
+import { Markdown } from "./components/Markdown";
+import { ParticleField } from "./components/ParticleField";
+import {
+  CheckIcon,
+  CopyIcon,
+  MenuIcon,
+  NewChatIcon,
+  PanelIcon,
+  PdfIcon,
+} from "./components/icons";
+import {
+  formatTime,
+  getSourcePage,
+  type Message,
+  type Source,
+  type UploadedDocument,
+} from "./types";
 
 /* =====================================================
-   NIMBUS LOGO
+   NIMBUS
+
+   The transport layer below is unchanged from the
+   original client: the same endpoints, the same
+   multipart upload, the same SSE frame parsing, the
+   same citation-filtering rules and the same message
+   identity scheme. Everything added here is presentation
+   fed by state that already existed, plus three fields
+   that record what the stream reported so the retrieval
+   trace can show it.
 ===================================================== */
 
-function NimbusLogo() {
-  return (
-    <div
-      className="nimbus-logo"
-      aria-hidden="true"
-    >
-      <span />
-      <span />
-      <span />
-    </div>
-  );
-}
-
-
-/* =====================================================
-   PDF ICON
-===================================================== */
-
-function PdfIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <path d="M8 13h2" />
-      <path d="M8 17h8" />
-      <path d="M13 13h3" />
-    </svg>
-  );
-}
-
-
-/* =====================================================
-   INLINE MARKDOWN
-===================================================== */
-
-function renderInline(text: string) {
-
-  const parts =
-    text.split(
-      /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*)/g
-    );
-
-
-  return parts.map(
-    (part, index) => {
-
-      if (
-        part.startsWith("`") &&
-        part.endsWith("`")
-      ) {
-        return (
-          <code
-            key={index}
-            className="inline-code"
-          >
-            {part.slice(1, -1)}
-          </code>
-        );
-      }
-
-
-      if (
-        part.startsWith("**") &&
-        part.endsWith("**")
-      ) {
-        return (
-          <strong key={index}>
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-
-
-      if (
-        part.startsWith("*") &&
-        part.endsWith("*")
-      ) {
-        return (
-          <em key={index}>
-            {part.slice(1, -1)}
-          </em>
-        );
-      }
-
-
-      return (
-        <span key={index}>
-          {part}
-        </span>
-      );
-    }
-  );
-}
-
-
-/* =====================================================
-   MARKDOWN MESSAGE
-===================================================== */
-
-function MarkdownMessage({
-  content,
-}: {
-  content: string;
-}) {
-
-  const lines =
-    content.split("\n");
-
-  const elements:
-    React.ReactNode[] = [];
-
-  let bulletItems:
-    string[] = [];
-
-  let numberedItems:
-    string[] = [];
-
-  let codeLines:
-    string[] = [];
-
-  let insideCode =
-    false;
-
-
-  const flushLists = () => {
-
-    if (
-      bulletItems.length > 0
-    ) {
-
-      elements.push(
-        <ul
-          key={`ul-${elements.length}`}
-        >
-          {bulletItems.map(
-            (item, index) => (
-              <li key={index}>
-                {renderInline(item)}
-              </li>
-            )
-          )}
-        </ul>
-      );
-
-      bulletItems = [];
-    }
-
-
-    if (
-      numberedItems.length > 0
-    ) {
-
-      elements.push(
-        <ol
-          key={`ol-${elements.length}`}
-        >
-          {numberedItems.map(
-            (item, index) => (
-              <li key={index}>
-                {renderInline(item)}
-              </li>
-            )
-          )}
-        </ol>
-      );
-
-      numberedItems = [];
-    }
-  };
-
-
-  const flushCode = () => {
-
-    if (
-      codeLines.length > 0
-    ) {
-
-      elements.push(
-        <pre
-          key={`code-${elements.length}`}
-        >
-          <code>
-            {codeLines.join("\n")}
-          </code>
-        </pre>
-      );
-
-      codeLines = [];
-    }
-  };
-
-
-  lines.forEach(
-    (line, index) => {
-
-      const trimmed =
-        line.trim();
-
-
-      if (
-        trimmed.startsWith("```")
-      ) {
-
-        if (insideCode) {
-
-          flushCode();
-
-          insideCode =
-            false;
-
-        } else {
-
-          flushLists();
-
-          insideCode =
-            true;
-        }
-
-        return;
-      }
-
-
-      if (insideCode) {
-
-        codeLines.push(line);
-
-        return;
-      }
-
-
-      if (!trimmed) {
-
-        flushLists();
-
-        return;
-      }
-
-
-      if (
-        trimmed.startsWith("# ")
-      ) {
-
-        flushLists();
-
-        elements.push(
-          <h2 key={index}>
-            {renderInline(
-              trimmed.slice(2)
-            )}
-          </h2>
-        );
-
-        return;
-      }
-
-
-      if (
-        trimmed.startsWith("## ")
-      ) {
-
-        flushLists();
-
-        elements.push(
-          <h3 key={index}>
-            {renderInline(
-              trimmed.slice(3)
-            )}
-          </h3>
-        );
-
-        return;
-      }
-
-
-      if (
-        trimmed.startsWith("### ")
-      ) {
-
-        flushLists();
-
-        elements.push(
-          <h4 key={index}>
-            {renderInline(
-              trimmed.slice(4)
-            )}
-          </h4>
-        );
-
-        return;
-      }
-
-
-      if (
-        /^[-*•]\s+/.test(
-          trimmed
-        )
-      ) {
-
-        numberedItems = [];
-
-        bulletItems.push(
-          trimmed.replace(
-            /^[-*•]\s+/,
-            ""
-          )
-        );
-
-        return;
-      }
-
-
-      if (
-        /^\d+\.\s+/.test(
-          trimmed
-        )
-      ) {
-
-        bulletItems = [];
-
-        numberedItems.push(
-          trimmed.replace(
-            /^\d+\.\s+/,
-            ""
-          )
-        );
-
-        return;
-      }
-
-
-      if (
-        /^---+$/.test(
-          trimmed
-        )
-      ) {
-
-        flushLists();
-
-        elements.push(
-          <hr key={index} />
-        );
-
-        return;
-      }
-
-
-      flushLists();
-
-      elements.push(
-        <p key={index}>
-          {renderInline(trimmed)}
-        </p>
-      );
-    }
-  );
-
-
-  flushLists();
-
-  flushCode();
-
-
-  return (
-    <div className="markdown">
-      {elements}
-    </div>
-  );
-}
-
-
-/* =====================================================
-   PDF UPLOAD CARD
-===================================================== */
-
-function UploadCard({
-  document,
-}: {
-  document: UploadedDocument;
-}) {
-
-  return (
-    <div className="upload-card">
-
-      <div className="upload-card-icon">
-        <PdfIcon />
-      </div>
-
-
-      <div className="upload-card-info">
-
-        <div className="upload-card-name">
-          {document.name}
-        </div>
-
-
-        <div className="upload-card-meta">
-
-          PDF ·{" "}
-          {document.pages}{" "}
-          {document.pages === 1
-            ? "page"
-            : "pages"}{" "}
-          ·{" "}
-          {document.chunks}{" "}
-          {document.chunks === 1
-            ? "chunk"
-            : "chunks"}
-
-        </div>
-
-      </div>
-
-
-      <div
-        className="upload-card-check"
-        aria-label="Upload complete"
-      >
-
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <path d="M20 6L9 17l-5-5" />
-        </svg>
-
-      </div>
-
-    </div>
-  );
-}
-
-
-/* =====================================================
-   APP
-===================================================== */
+const API_BASE_URL = "http://localhost:5001/api";
 
 function App() {
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadingName, setUploadingName] = useState<string | null>(null);
 
-  const [input, setInput] =
-    useState("");
-
-  const [isLoading, setIsLoading] =
-    useState(false);
-
-  const [isListening, setIsListening] =
-    useState(false);
-
-  const [isUploading, setIsUploading] =
-    useState(false);
+  /* Drives the ingest cinematic. `settled` flips only when
+     the real request returns, so the sequence can hold. */
+  const [ingest, setIngest] = useState<{
+    name: string;
+    settled: boolean;
+    failed: boolean;
+    pages?: number;
+    chunks?: number;
+  } | null>(null);
 
   const [documents, setDocuments] = useState<UploadedDocument[]>([]);
+  const [documentId, setDocumentId] = useState<string | null>(null);
+  const [documentName, setDocumentName] = useState<string | null>(null);
 
-  const [documentId, setDocumentId] =
-    useState<string | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const [documentName, setDocumentName] =
-    useState<string | null>(null);
+  /* --- View state (presentation only) --------------- */
 
+  const [activePage, setActivePage] = useState<number | null>(null);
+  const [railOpen, setRailOpen] = useState(false);
+  const [evidenceOpen, setEvidenceOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
-  const fileInputRef =
-    useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dragDepth = useRef(0);
 
-  const textareaRef =
-    useRef<HTMLTextAreaElement>(null);
-
-  const messagesEndRef =
-    useRef<HTMLDivElement>(null);
-
+  /* The uploaded document waits here until the cinematic
+     resolves, so it lands in the rail on the beat rather
+     than popping in mid-sequence. */
+  const pendingDoc = useRef<UploadedDocument | null>(null);
 
   /*
-   * Citation pages and raw sources
-   * are stored per assistant message.
-   *
-   * This prevents unrelated retrieved
+   * Citation pages and raw sources are stored per
+   * assistant message. This prevents unrelated retrieved
    * pages from being shown as sources.
    */
 
-  const citedPagesRef =
-    useRef<Record<number, number[]>>(
-      {}
-    );
+  const citedPagesRef = useRef<Record<number, number[]>>({});
+  const pendingSourcesRef = useRef<Record<number, Source[]>>({});
 
-  const pendingSourcesRef =
-    useRef<Record<number, Source[]>>(
-      {}
-    );
-
-
-  const [messages, setMessages] =
-    useState<Message[]>([
-      {
-        id: 1,
-
-        role: "assistant",
-
-        content:
-          "Hello, I'm Nimbus. Upload a PDF using the **+** button, then ask me anything about it.",
-
-        timestamp:
-          new Date(),
-      },
-    ]);
-
+  /* Tokens arrive far faster than the screen refreshes.
+     Buffering them and flushing once per frame keeps the
+     transcript identical while cutting renders from one
+     per token to at most one per frame. */
+  const tokenBuffer = useRef<Record<number, string>>({});
+  const flushHandle = useRef(0);
 
   /* ===================================================
      AUTO SCROLL
   =================================================== */
 
   useEffect(() => {
-
-    requestAnimationFrame(
-      () => {
-
-        messagesEndRef.current?.scrollIntoView(
-          {
-            behavior: "auto",
-            block: "end",
-          }
-        );
-
-      }
-    );
-
+    requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({
+        behavior: "auto",
+        block: "end",
+      });
+    });
   }, [messages]);
 
+  useEffect(
+    () => () => {
+      if (flushHandle.current) {
+        cancelAnimationFrame(flushHandle.current);
+      }
+    },
+    [],
+  );
 
   /* ===================================================
      TEXTAREA RESIZE
   =================================================== */
 
-  const resizeTextarea =
-    () => {
+  const resizeTextarea = () => {
+    const textarea = textareaRef.current;
 
-      const textarea =
-        textareaRef.current;
+    if (!textarea) {
+      return;
+    }
 
-      if (!textarea) {
-        return;
-      }
-
-      textarea.style.height =
-        "auto";
-
-      const newHeight =
-        Math.min(
-          textarea.scrollHeight,
-          150
-        );
-
-      textarea.style.height =
-        `${newHeight}px`;
-    };
-
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-
-    setInput(
-      e.target.value
-    );
-
-    resizeTextarea();
+    textarea.style.height = "auto";
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 168)}px`;
   };
 
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    setInput(e.target.value);
+    resizeTextarea();
+  };
 
   /* ===================================================
      NEW CHAT
   =================================================== */
 
-  const startNewChat =
-    () => {
+  const startNewChat = () => {
+    if (isLoading || isUploading) {
+      return;
+    }
 
-      if (
-        isLoading ||
-        isUploading
-      ) {
-        return;
-      }
+    setInput("");
+    setDocuments([]);
+    setDocumentId(null);
+    setDocumentName(null);
+    setActivePage(null);
 
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
-      setInput("");
-
-      setDocuments([]);
-
-      setDocumentId(null);
-
-      setDocumentName(null);
-
-
-      if (
-        textareaRef.current
-      ) {
-
-        textareaRef.current.style.height =
-          "auto";
-      }
-
-
-      setMessages([
-        {
-          id: Date.now(),
-
-          role: "assistant",
-
-          content:
-            "Hello, I'm Nimbus. Upload a PDF using the **+** button, then ask me anything about it.",
-
-          timestamp:
-            new Date(),
-        },
-      ]);
-    };
-
+    setMessages([]);
+  };
 
   /* ===================================================
      SPEECH TO TEXT
   =================================================== */
 
-  const startSpeechRecognition =
-    () => {
+  const startSpeechRecognition = () => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
 
-      const SpeechRecognition =
-        (window as any).SpeechRecognition ||
-        (window as any)
-          .webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser.");
+      return;
+    }
 
+    const recognition = new SpeechRecognition();
 
-      if (
-        !SpeechRecognition
-      ) {
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
 
-        alert(
-          "Speech recognition is not supported in this browser."
-        );
-
-        return;
-      }
-
-
-      const recognition =
-        new SpeechRecognition();
-
-
-      recognition.lang =
-        "en-US";
-
-      recognition.continuous =
-        false;
-
-      recognition.interimResults =
-        false;
-
-
-      recognition.onstart =
-        () => {
-
-          setIsListening(
-            true
-          );
-        };
-
-
-      recognition.onresult =
-        (
-          event: any
-        ) => {
-
-          const transcript =
-            event.results[0][0]
-              .transcript;
-
-
-          setInput(
-            (previous) =>
-              previous.trim()
-                ? `${previous} ${transcript}`
-                : transcript
-          );
-
-
-          setTimeout(
-            resizeTextarea,
-            0
-          );
-        };
-
-
-      recognition.onerror =
-        (
-          event: any
-        ) => {
-
-          console.error(
-            "Speech recognition error:",
-            event.error
-          );
-
-          setIsListening(
-            false
-          );
-        };
-
-
-      recognition.onend =
-        () => {
-
-          setIsListening(
-            false
-          );
-        };
-
-
-      recognition.start();
+    recognition.onstart = () => {
+      setIsListening(true);
     };
 
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+
+      setInput((previous) =>
+        previous.trim() ? `${previous} ${transcript}` : transcript,
+      );
+
+      setTimeout(resizeTextarea, 0);
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      setIsListening(false);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
 
   /* ===================================================
      PDF UPLOAD
   =================================================== */
 
-  const uploadPdf =
-    async (
-      file: File
-    ) => {
+  const uploadPdf = async (file: File) => {
+    if (isLoading || isUploading) {
+      return;
+    }
 
-      if (
-        isLoading ||
-        isUploading
-      ) {
-        return;
-      }
+    const isPdf =
+      file.type === "application/pdf" ||
+      file.name.toLowerCase().endsWith(".pdf");
 
+    if (!isPdf) {
+      alert("Only PDF files are supported.");
+      return;
+    }
 
-      const isPdf =
-        file.type ===
-          "application/pdf" ||
-        file.name
-          .toLowerCase()
-          .endsWith(".pdf");
+    const formData = new FormData();
+    formData.append("file", file);
 
+    setIsUploading(true);
+    setUploadingName(file.name);
+    setIngest({ name: file.name, settled: false, failed: false });
 
-      if (!isPdf) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/documents`, {
+        method: "POST",
+        body: formData,
+      });
 
-        alert(
-          "Only PDF files are supported."
-        );
-
-        return;
-      }
-
-
-      const formData =
-        new FormData();
-
-
-      formData.append(
-        "file",
-        file
-      );
-
-
-      setIsUploading(
-        true
-      );
-
+      let data: any = null;
 
       try {
+        data = await response.json();
+      } catch {
+        // Keep generic error.
+      }
 
-        const response =
-          await fetch(
-            `${API_BASE_URL}/documents`,
-            {
-              method:
-                "POST",
+      if (!response.ok) {
+        const errorMessage =
+          data?.details?.detail ||
+          data?.details?.error ||
+          data?.detail ||
+          data?.error ||
+          "PDF upload failed.";
 
-              body:
-                formData,
+        throw new Error(errorMessage);
+      }
+
+      if (!data?.document_id) {
+        throw new Error(
+          "The backend did not return a document_id.",
+        );
+      }
+
+      const uploadedDocument: UploadedDocument = {
+        id: data.document_id,
+        name: data.filename || file.name,
+        pages: Number(data.pages || 0),
+        chunks: Number(data.chunks || 0),
+      };
+
+      /* Held until the cinematic resolves - commitIngest
+         below does the actual insertion. */
+      pendingDoc.current = uploadedDocument;
+
+      setIngest((previous) =>
+        previous
+          ? {
+              ...previous,
+              settled: true,
+              pages: uploadedDocument.pages,
+              chunks: uploadedDocument.chunks,
             }
-          );
+          : previous,
+      );
+    } catch (error) {
+      console.error("Nimbus upload error:", error);
 
+      const errorText =
+        error instanceof Error
+          ? error.message
+          : "Unknown upload error.";
 
-        let data:
-          any = null;
+      pendingDoc.current = null;
 
+      setIngest((previous) =>
+        previous
+          ? { ...previous, settled: true, failed: true }
+          : previous,
+      );
 
-        try {
+      setMessages((previous) => [
+        ...previous,
+        {
+          id: Date.now(),
+          role: "assistant",
+          content: `I couldn't upload the PDF.\n\n${errorText}`,
+          timestamp: new Date(),
+          isError: true,
+        },
+      ]);
+    } finally {
+      setIsUploading(false);
+      setUploadingName(null);
 
-          data =
-            await response.json();
-
-        } catch {
-
-          // Keep generic error.
-        }
-
-
-        if (
-          !response.ok
-        ) {
-
-          const errorMessage =
-            data?.details?.detail ||
-            data?.details?.error ||
-            data?.detail ||
-            data?.error ||
-            "PDF upload failed.";
-
-
-          throw new Error(
-            errorMessage
-          );
-        }
-
-
-        if (
-          !data?.document_id
-        ) {
-
-          throw new Error(
-            "The backend did not return a document_id."
-          );
-        }
-
-
-        const uploadedDocument:
-          UploadedDocument =
-          {
-            id:
-              data.document_id,
-
-            name:
-              data.filename ||
-              file.name,
-
-            pages:
-              Number(
-                data.pages || 0
-              ),
-
-            chunks:
-              Number(
-                data.chunks || 0
-              ),
-          };
-
-        setDocuments((previous) => [
-  ...previous,
-  uploadedDocument,
-]);
-
-        /*
-         * Keep document information
-         * internally.
-         *
-         * Do NOT render a separate
-         * document library.
-         */
-
-        setDocumentId(
-          uploadedDocument.id
-        );
-
-        setDocumentName(
-          uploadedDocument.name
-        );
-
-
-        /*
-         * Show the uploaded PDF
-         * directly on the USER side.
-         */
-
-        const uploadMessageId =
-          Date.now();
-
-        const successMessageId =
-          uploadMessageId + 1;
-
-
-        setMessages(
-          (previous) => [
-
-            ...previous,
-
-            {
-              id:
-                uploadMessageId,
-
-              role:
-                "user",
-
-              content:
-                "",
-
-              timestamp:
-                new Date(),
-
-              documentUpload:
-                uploadedDocument,
-            },
-
-
-            {
-              id:
-                successMessageId,
-
-              role:
-                "assistant",
-
-              content:
-                `PDF uploaded successfully.\n\n**${uploadedDocument.name}** is ready for questions.\n\n**${uploadedDocument.pages} ${uploadedDocument.pages === 1 ? "page" : "pages"} · ${uploadedDocument.chunks} ${uploadedDocument.chunks === 1 ? "chunk" : "chunks"}**`,
-
-              timestamp:
-                new Date(),
-            },
-
-          ]
-        );
-
-      } catch (
-        error
-      ) {
-
-        console.error(
-          "Nimbus upload error:",
-          error
-        );
-
-
-        const errorText =
-          error instanceof Error
-            ? error.message
-            : "Unknown upload error.";
-
-
-        setMessages(
-          (previous) => [
-
-            ...previous,
-
-            {
-              id:
-                Date.now(),
-
-              role:
-                "assistant",
-
-              content:
-                `I couldn't upload the PDF.\n\n${errorText}`,
-
-              timestamp:
-                new Date(),
-            },
-
-          ]
-        );
-
-      } finally {
-
-        setIsUploading(
-          false
-        );
-
-
-        if (
-          fileInputRef.current
-        ) {
-
-          fileInputRef.current.value =
-            "";
-        }
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
       }
-    };
+    }
+  };
 
+  /* Called when the cinematic finishes its resolve. */
+  const commitIngest = () => {
+    const uploadedDocument = pendingDoc.current;
 
-  const handleFileChange =
-    (
-      e: React.ChangeEvent<HTMLInputElement>
-    ) => {
+    setIngest(null);
 
-      const file =
-        e.target.files?.[0];
+    if (!uploadedDocument) {
+      return;
+    }
 
+    pendingDoc.current = null;
 
-      if (file) {
+    setDocuments((previous) => [...previous, uploadedDocument]);
+    setDocumentId(uploadedDocument.id);
+    setDocumentName(uploadedDocument.name);
 
-        uploadPdf(
-          file
-        );
+    setMessages((previous) => [
+      ...previous,
+      {
+        id: Date.now(),
+        role: "user",
+        content: "",
+        timestamp: new Date(),
+        documentUpload: uploadedDocument,
+      },
+    ]);
+  };
+
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      uploadPdf(file);
+    }
+  };
+
+  const selectDocument = (document: UploadedDocument) => {
+    if (isLoading || isUploading) {
+      return;
+    }
+
+    setDocumentId(document.id);
+    setDocumentName(document.name);
+    setRailOpen(false);
+  };
+
+  /* Removes the document from this session's picker only.
+     There is no DELETE endpoint, so nothing is destroyed
+     server-side and the index stays available. */
+
+  const removeDocument = (id: string) => {
+    if (isLoading || isUploading) {
+      return;
+    }
+
+    setDocuments((previous) => {
+      const next = previous.filter((item) => item.id !== id);
+
+      if (id === documentId) {
+        const fallback = next[next.length - 1] ?? null;
+        setDocumentId(fallback?.id ?? null);
+        setDocumentName(fallback?.name ?? null);
       }
-    };
 
-const selectDocument = (document: UploadedDocument) => {
-  if (isLoading || isUploading) return;
+      return next;
+    });
+  };
 
-  setDocumentId(document.id);
-  setDocumentName(document.name);
-};
+  /* ===================================================
+     DRAG AND DROP
+  =================================================== */
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    if (!Array.from(e.dataTransfer.types).includes("Files")) {
+      return;
+    }
+
+    dragDepth.current += 1;
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+
+    if (dragDepth.current === 0) {
+      setIsDragging(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    dragDepth.current = 0;
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+
+    if (file) {
+      uploadPdf(file);
+    }
+  };
 
   /* ===================================================
      COPY
   =================================================== */
 
-  const copyMessage =
-    async (
-      content: string
-    ) => {
-
-      try {
-
-        await navigator.clipboard.writeText(
-          content
-        );
-
-      } catch (
-        error
-      ) {
-
-        console.error(
-          "Copy failed:",
-          error
-        );
-      }
-    };
-
+  const copyMessage = async (id: number, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 1600);
+    } catch (error) {
+      console.error("Copy failed:", error);
+    }
+  };
 
   /* ===================================================
      FILTER SOURCES
   =================================================== */
 
-  const filterSourcesByCitedPages =
-    (
-      sources: Source[],
-      citedPages: number[]
-    ) => {
+  const filterSourcesByCitedPages = (
+    sources: Source[],
+    citedPages: number[],
+  ) => {
+    if (citedPages.length === 0) {
+      return [];
+    }
+
+    const citedSet = new Set(citedPages);
+    const seenPages = new Set<number>();
+
+    return sources.filter((source) => {
+      const page = getSourcePage(source);
 
       if (
-        citedPages.length ===
-        0
+        page == null ||
+        !citedSet.has(page) ||
+        seenPages.has(page)
       ) {
-
-        return [];
+        return false;
       }
 
-
-      const citedSet =
-        new Set(
-          citedPages
-        );
-
-
-      const seenPages =
-        new Set<number>();
-
-
-      return sources.filter(
-        (source) => {
-
-          const page =
-            getSourcePage(
-              source
-            );
-
-
-          if (
-            page == null ||
-            !citedSet.has(page) ||
-            seenPages.has(page)
-          ) {
-
-            return false;
-          }
-
-
-          seenPages.add(
-            page
-          );
-
-          return true;
-        }
-      );
-    };
-
+      seenPages.add(page);
+      return true;
+    });
+  };
 
   /* ===================================================
      UPDATE SOURCES
   =================================================== */
 
-  const updateAssistantSources =
-    (
-      assistantId: number,
-      sources: Source[]
-    ) => {
+  const updateAssistantSources = (
+    assistantId: number,
+    sources: Source[],
+  ) => {
+    pendingSourcesRef.current[assistantId] = sources;
 
-      pendingSourcesRef.current[
-        assistantId
-      ] =
-        sources;
+    const citedPages = citedPagesRef.current[assistantId] || [];
 
+    const filteredSources = filterSourcesByCitedPages(
+      sources,
+      citedPages,
+    );
 
-      const citedPages =
-        citedPagesRef.current[
-          assistantId
-        ] || [];
-
-
-      const filteredSources =
-        filterSourcesByCitedPages(
-          sources,
-          citedPages
-        );
-
-
-      setMessages(
-        (previous) =>
-          previous.map(
-            (message) =>
-              message.id ===
-              assistantId
-
-                ? {
-                    ...message,
-
-                    sources:
-                      filteredSources,
-                  }
-
-                : message
-          )
-      );
-    };
-
+    setMessages((previous) =>
+      previous.map((message) =>
+        message.id === assistantId
+          ? {
+              ...message,
+              sources: filteredSources,
+              retrieved: sources,
+            }
+          : message,
+      ),
+    );
+  };
 
   /* ===================================================
      UPDATE CITATIONS
   =================================================== */
 
-  const updateAssistantCitations =
-    (
-      assistantId: number,
-      pages: unknown
-    ) => {
+  const updateAssistantCitations = (
+    assistantId: number,
+    pages: unknown,
+  ) => {
+    const normalizedPages = Array.from(
+      new Set(
+        Array.isArray(pages)
+          ? pages
+              .map(Number)
+              .filter((page) => Number.isFinite(page))
+          : [],
+      ),
+    ).sort((a, b) => a - b);
 
-      const normalizedPages =
-        Array.from(
-          new Set(
-            Array.isArray(pages)
-              ? pages
-                  .map(Number)
-                  .filter(
-                    (page) =>
-                      Number.isFinite(
-                        page
-                      )
-                  )
-              : []
-          )
-        ).sort(
-          (a, b) =>
-            a - b
-        );
+    citedPagesRef.current[assistantId] = normalizedPages;
 
+    const rawSources = pendingSourcesRef.current[assistantId] || [];
 
-      citedPagesRef.current[
-        assistantId
-      ] =
-        normalizedPages;
+    const filteredSources = filterSourcesByCitedPages(
+      rawSources,
+      normalizedPages,
+    );
 
-
-      const rawSources =
-        pendingSourcesRef.current[
-          assistantId
-        ] || [];
-
-
-      const filteredSources =
-        filterSourcesByCitedPages(
-          rawSources,
-          normalizedPages
-        );
-
-
-      setMessages(
-        (previous) =>
-          previous.map(
-            (message) =>
-              message.id ===
-              assistantId
-
-                ? {
-                    ...message,
-
-                    sources:
-                      filteredSources,
-                  }
-
-                : message
-          )
-      );
-    };
-
+    setMessages((previous) =>
+      previous.map((message) =>
+        message.id === assistantId
+          ? {
+              ...message,
+              sources: filteredSources,
+              citedPages: normalizedPages,
+            }
+          : message,
+      ),
+    );
+  };
 
   /* ===================================================
      APPEND STREAM TOKEN
   =================================================== */
 
-  const appendAssistantText =
-    (
-      assistantId: number,
-      text: string
-    ) => {
+  const flushTokens = () => {
+    flushHandle.current = 0;
 
-      if (!text) {
-        return;
-      }
+    const buffered = tokenBuffer.current;
+    tokenBuffer.current = {};
 
+    const ids = Object.keys(buffered);
 
-      setMessages(
-        (previous) =>
-          previous.map(
-            (message) =>
-              message.id ===
-              assistantId
+    if (ids.length === 0) {
+      return;
+    }
 
-                ? {
-                    ...message,
+    setMessages((previous) =>
+      previous.map((message) => {
+        const chunk = buffered[message.id];
 
-                    content:
-                      message.content +
-                      text,
-                  }
+        return chunk
+          ? { ...message, content: message.content + chunk }
+          : message;
+      }),
+    );
+  };
 
-                : message
-          )
-      );
-    };
+  const appendAssistantText = (
+    assistantId: number,
+    text: string,
+  ) => {
+    if (!text) {
+      return;
+    }
 
+    tokenBuffer.current[assistantId] =
+      (tokenBuffer.current[assistantId] ?? "") + text;
+
+    if (flushHandle.current) {
+      return;
+    }
+
+    flushHandle.current = requestAnimationFrame(flushTokens);
+  };
 
   /* ===================================================
      PROCESS SSE EVENT
   =================================================== */
 
-  const processSSEEvent =
-    (
-      event: string,
-      assistantId: number
-    ) => {
+  const processSSEEvent = (event: string, assistantId: number) => {
+    const lines = event.split(/\r?\n/);
 
-      const lines =
-        event.split(
-          /\r?\n/
-        );
+    const eventName =
+      lines
+        .find((line) => line.startsWith("event:"))
+        ?.slice(6)
+        .trim() || "message";
 
+    const dataLine = lines.find((line) => line.startsWith("data:"));
 
-      const eventName =
-        lines
-          .find(
-            (line) =>
-              line.startsWith(
-                "event:"
-              )
-          )
-          ?.slice(6)
-          .trim() ||
-        "message";
+    if (!dataLine) {
+      return;
+    }
 
+    const dataText = dataLine.slice(5).trim();
 
-      const dataLine =
-        lines.find(
-          (line) =>
-            line.startsWith(
-              "data:"
-            )
-        );
+    if (!dataText || dataText === "[DONE]") {
+      return;
+    }
 
+    let data: any;
 
-      if (!dataLine) {
-        return;
-      }
+    try {
+      data = JSON.parse(dataText);
+    } catch {
+      console.warn("Could not parse SSE data:", dataText);
+      return;
+    }
 
+    /* TOKEN */
 
-      const dataText =
-        dataLine
-          .slice(5)
-          .trim();
+    if (eventName === "token") {
+      const token =
+        typeof data === "string" ? data : data?.text || "";
 
+      appendAssistantText(assistantId, token);
+      return;
+    }
 
-      if (
-        !dataText ||
-        dataText ===
-          "[DONE]"
-      ) {
+    /* CITATION VALIDATION */
 
-        return;
-      }
+    if (eventName === "citation_validation") {
+      updateAssistantCitations(assistantId, data?.cited_pages);
+      return;
+    }
 
+    /* SOURCES */
 
-      let data:
-        any;
+    if (eventName === "sources") {
+      const sources = Array.isArray(data)
+        ? data
+        : data?.sources || [];
 
+      updateAssistantSources(assistantId, sources);
+      return;
+    }
 
-      try {
+    /* ERROR */
 
-        data =
-          JSON.parse(
-            dataText
-          );
-
-      } catch {
-
-        console.warn(
-          "Could not parse SSE data:",
-          dataText
-        );
-
-        return;
-      }
-
-
-      /* TOKEN */
-
-      if (
-        eventName ===
-        "token"
-      ) {
-
-        const token =
-          typeof data ===
-          "string"
-
-            ? data
-
-            : data?.text ||
-              "";
-
-
-        appendAssistantText(
-          assistantId,
-          token
-        );
-
-        return;
-      }
-
-
-      /* CITATION VALIDATION */
-
-      if (
-        eventName ===
-        "citation_validation"
-      ) {
-
-        updateAssistantCitations(
-          assistantId,
-          data?.cited_pages
-        );
-
-        return;
-      }
-
-
-      /* SOURCES */
-
-      if (
-        eventName ===
-        "sources"
-      ) {
-
-        const sources =
-          Array.isArray(data)
-            ? data
-            : data?.sources ||
-              [];
-
-
-        updateAssistantSources(
-          assistantId,
-          sources
-        );
-
-        return;
-      }
-
-
-      /* ERROR */
-
-      if (
-        eventName ===
-        "error"
-      ) {
-
-        throw new Error(
-          data?.error ||
-            data?.detail ||
-            "Nimbus streaming failed."
-        );
-      }
-    };
-
+    if (eventName === "error") {
+      throw new Error(
+        data?.error || data?.detail || "Nimbus streaming failed.",
+      );
+    }
+  };
 
   /* ===================================================
      SEND MESSAGE
   =================================================== */
 
-  const sendMessage =
-    async () => {
+  const sendMessage = async (override?: string) => {
+    const trimmedInput = (override ?? input).trim();
 
-      const trimmedInput =
-        input.trim();
+    if (!trimmedInput || isLoading || isUploading) {
+      return;
+    }
 
-
-      if (
-        !trimmedInput ||
-        isLoading ||
-        isUploading
-      ) {
-
-        return;
-      }
-
-
-      if (
-        !documentId
-      ) {
-
-        setMessages(
-          (previous) => [
-
-            ...previous,
-
-            {
-              id:
-                Date.now(),
-
-              role:
-                "assistant",
-
-              content:
-                "Please upload a PDF using the **+** button before asking a question.",
-
-              timestamp:
-                new Date(),
-            },
-
-          ]
-        );
-
-        return;
-      }
-
-
-      const userMessage:
-        Message =
+    if (!documentId) {
+      setMessages((previous) => [
+        ...previous,
         {
-          id:
-            Date.now(),
-
-          role:
-            "user",
-
+          id: Date.now(),
+          role: "assistant",
           content:
-            trimmedInput,
+            "Please upload a PDF before asking a question.",
+          timestamp: new Date(),
+        },
+      ]);
 
-          timestamp:
-            new Date(),
-        };
+      return;
+    }
 
+    const userMessage: Message = {
+      id: Date.now(),
+      role: "user",
+      content: trimmedInput,
+      timestamp: new Date(),
+    };
 
-      const assistantId =
-        Date.now() + 1;
+    const assistantId = Date.now() + 1;
 
+    citedPagesRef.current[assistantId] = [];
+    pendingSourcesRef.current[assistantId] = [];
 
-      citedPagesRef.current[
-        assistantId
-      ] = [];
+    setMessages((previous) => [
+      ...previous,
+      userMessage,
+      {
+        id: assistantId,
+        role: "assistant",
+        content: "",
+        timestamp: new Date(),
+        sources: [],
+        streaming: true,
+      },
+    ]);
 
+    setInput("");
+    setActivePage(null);
 
-      pendingSourcesRef.current[
-        assistantId
-      ] = [];
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
+    setIsLoading(true);
 
-      setMessages(
-        (previous) => [
+    try {
+      const response = await fetch(`${API_BASE_URL}/query/stream`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          document_id: documentId,
+          question: trimmedInput,
+        }),
+      });
 
-          ...previous,
+      if (!response.ok) {
+        let errorMessage =
+          "Something went wrong while contacting Nimbus.";
 
-          userMessage,
+        try {
+          const errorData = await response.json();
 
-          {
-            id:
-              assistantId,
+          errorMessage =
+            errorData?.details?.detail ||
+            errorData?.details?.error ||
+            errorData?.detail ||
+            errorData?.error ||
+            errorMessage;
+        } catch {
+          // Keep generic error.
+        }
 
-            role:
-              "assistant",
+        throw new Error(errorMessage);
+      }
 
-            content:
-              "",
+      if (!response.body) {
+        throw new Error(
+          "Streaming is not supported by this response.",
+        );
+      }
 
-            timestamp:
-              new Date(),
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
 
-            sources:
-              [],
-          },
+      let buffer = "";
 
-        ]
+      while (true) {
+        const { value, done } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const events = buffer.split(/\r?\n\r?\n/);
+
+        buffer = events.pop() || "";
+
+        for (const event of events) {
+          if (event.trim()) {
+            processSSEEvent(event, assistantId);
+          }
+        }
+      }
+
+      if (buffer.trim()) {
+        processSSEEvent(buffer, assistantId);
+      }
+    } catch (error) {
+      console.error("Nimbus API error:", error);
+
+      const errorText =
+        error instanceof Error
+          ? error.message
+          : "Unknown connection error.";
+
+      setMessages((previous) =>
+        previous.map((message) =>
+          message.id === assistantId
+            ? {
+                ...message,
+                content: `I couldn't reach Nimbus.\n\n${errorText}`,
+                sources: [],
+                isError: true,
+              }
+            : message,
+        ),
       );
+    } finally {
+      /* Land the tail of the buffer before the message is
+         marked complete, or the last frame's tokens are
+         dropped. */
+      if (flushHandle.current) {
+        cancelAnimationFrame(flushHandle.current);
+      }
 
+      flushTokens();
 
-      setInput("");
+      setIsLoading(false);
 
+      setMessages((previous) =>
+        previous.map((message) =>
+          message.id === assistantId
+            ? { ...message, streaming: false }
+            : message,
+        ),
+      );
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage();
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  /* ===================================================
+     DERIVED
+  =================================================== */
+
+  /* Evidence mirrors the most recent answer that has any. */
+  const evidenceSources = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const message = messages[i];
 
       if (
-        textareaRef.current
+        message.role === "assistant" &&
+        message.sources &&
+        message.sources.length > 0
       ) {
-
-        textareaRef.current.style.height =
-          "auto";
+        return message.sources;
       }
-
-
-      setIsLoading(
-        true
-      );
-
-
-      try {
-
-        const response =
-          await fetch(
-            `${API_BASE_URL}/query/stream`,
-            {
-              method:
-                "POST",
-
-              headers: {
-                "Content-Type":
-                  "application/json",
-              },
-
-              body:
-                JSON.stringify({
-                  document_id:
-                    documentId,
-
-                  question:
-                    trimmedInput,
-                }),
-            }
-          );
-
-
-        if (
-          !response.ok
-        ) {
-
-          let errorMessage =
-            "Something went wrong while contacting Nimbus.";
-
-
-          try {
-
-            const errorData =
-              await response.json();
-
-
-            errorMessage =
-              errorData?.details?.detail ||
-              errorData?.details?.error ||
-              errorData?.detail ||
-              errorData?.error ||
-              errorMessage;
-
-          } catch {
-            // Keep generic error.
-          }
-
-
-          throw new Error(
-            errorMessage
-          );
-        }
-
-
-        if (
-          !response.body
-        ) {
-
-          throw new Error(
-            "Streaming is not supported by this response."
-          );
-        }
-
-
-        const reader =
-          response.body.getReader();
-
-
-        const decoder =
-          new TextDecoder();
-
-
-        let buffer =
-          "";
-
-
-        while (
-          true
-        ) {
-
-          const {
-            value,
-            done,
-          } =
-            await reader.read();
-
-
-          if (
-            done
-          ) {
-
-            break;
-          }
-
-
-          buffer +=
-            decoder.decode(
-              value,
-              {
-                stream:
-                  true,
-              }
-            );
-
-
-          const events =
-            buffer.split(
-              /\r?\n\r?\n/
-            );
-
-
-          buffer =
-            events.pop() ||
-            "";
-
-
-          for (
-            const event of events
-          ) {
-
-            if (
-              event.trim()
-            ) {
-
-              processSSEEvent(
-                event,
-                assistantId
-              );
-            }
-          }
-        }
-
-
-        if (
-          buffer.trim()
-        ) {
-
-          processSSEEvent(
-            buffer,
-            assistantId
-          );
-        }
-
-      } catch (
-        error
-      ) {
-
-        console.error(
-          "Nimbus API error:",
-          error
-        );
-
-
-        const errorText =
-          error instanceof Error
-            ? error.message
-            : "Unknown connection error.";
-
-
-        setMessages(
-          (previous) =>
-            previous.map(
-              (message) =>
-                message.id ===
-                assistantId
-
-                  ? {
-                      ...message,
-
-                      content:
-                        `I couldn't connect to Nimbus.\n\n${errorText}`,
-
-                      sources:
-                        [],
-                    }
-
-                  : message
-            )
-        );
-
-      } finally {
-
-        setIsLoading(
-          false
-        );
-      }
-    };
-
-
-  /* ===================================================
-     FORM SUBMIT
-  =================================================== */
-
-  const handleSubmit =
-    (
-      e: React.FormEvent
-    ) => {
-
-      e.preventDefault();
-
-      sendMessage();
-    };
-
-
-  /* ===================================================
-     RENDER
-  =================================================== */
+    }
+
+    return [] as Source[];
+  }, [messages]);
+
+  /* The pipeline reports its stage once, in the status
+     pill, instead of repeating a stepper inside every
+     answer. Derived from the same stream flags the
+     stepper used. */
+  const phase = useMemo(() => {
+    const last = messages[messages.length - 1];
+
+    if (!last || last.role !== "assistant" || !last.streaming) {
+      return null;
+    }
+
+    if (!last.retrieved) {
+      return "Retrieving";
+    }
+
+    if (!last.citedPages) {
+      return "Reading";
+    }
+
+    return "Composing";
+  }, [messages]);
+
+  const isBusy = isLoading || isUploading;
+  const hasConversation = messages.length > 0;
+
+  const placeholder = isUploading
+    ? "Processing your PDF…"
+    : isLoading
+      ? "Nimbus is reading…"
+      : documentId
+        ? "Ask anything about this document…"
+        : "Upload a PDF to begin…";
+
+  const hint = documentName
+    ? `${documentName} · active`
+    : "No document selected";
 
   return (
-    <main className="app">
+    <main
+      className="shell"
+      onDragEnter={handleDragEnter}
+      onDragOver={(e) => e.preventDefault()}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      <div className="desk" />
+      <div className="desk-bloom" />
 
-      <div className="background-grid" />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf,.pdf"
+        onChange={handleFileChange}
+        hidden
+      />
 
-      <div className="background-orb" />
+      {/* ============================================
+          TOPBAR
+      ============================================ */}
 
+      <header className="topbar">
+        <div className="topbar-left">
+          <button
+            type="button"
+            className="btn-icon only-narrow"
+            onClick={() => setRailOpen(true)}
+            aria-label="Open the document library"
+          >
+            <MenuIcon size={18} />
+          </button>
 
-      {/* =================================================
-          NAVBAR
-      ================================================= */}
+          <button
+            type="button"
+            className="brand"
+            onClick={startNewChat}
+            aria-label="Nimbus - start a new session"
+          >
+            <span className="mark" aria-hidden="true">
+              <span className="mark-sheet" />
+              <span className="mark-sheet" />
+              <span className="mark-sheet" />
+            </span>
 
-      <header className="navbar">
-
-        <button
-          className="brand"
-          onClick={
-            startNewChat
-          }
-          aria-label="Start a new chat"
-        >
-
-          <NimbusLogo />
-
-          <div className="brand-text">
-
-            <div className="brand-name">
-              Nimbus
-            </div>
-
-            <div className="brand-caption">
-              AI ASSISTANT
-            </div>
-
-          </div>
-
-        </button>
-
-
-        <div className="nav-status">
-
-          <span className="status-dot" />
-
-          <span>
-
-            {documentId
-              ? "Document connected"
-              : "Waiting for PDF"}
-
-          </span>
-
+            <span className="brand-text">
+              <span className="brand-name">Nimbus</span>
+              <span className="brand-sub">Document Intelligence</span>
+            </span>
+          </button>
         </div>
 
+        <div className="topbar-right">
+          <span
+            className={`status ${
+              isBusy ? "is-busy" : documentId ? "is-live" : ""
+            }`}
+          >
+            <span className="status-dot" />
+            {isUploading
+              ? "Processing"
+              : isLoading
+                ? (phase ?? "Retrieving")
+                : documentId
+                  ? "Grounded"
+                  : "Awaiting PDF"}
+          </span>
+
+          <button
+            type="button"
+            className="btn-icon"
+            onClick={startNewChat}
+            disabled={isBusy}
+            aria-label="Start a new session"
+            title="New session"
+          >
+            <NewChatIcon size={17} />
+          </button>
+
+          <button
+            type="button"
+            className="btn-icon only-narrow"
+            onClick={() => setEvidenceOpen(true)}
+            aria-label="Open the evidence panel"
+          >
+            <PanelIcon size={17} />
+          </button>
+        </div>
       </header>
 
+      {/* ============================================
+          RAIL
+      ============================================ */}
 
-      {/* =================================================
-          CHAT AREA
-      ================================================= */}
+      <aside
+        className={`rail ${railOpen ? "is-open" : ""}`}
+        aria-label="Document library"
+      >
+        <DocumentRail
+          documents={documents}
+          activeId={documentId}
+          isBusy={isBusy}
+          uploadingName={uploadingName}
+          onSelect={selectDocument}
+          onRemove={removeDocument}
+          onUploadClick={() => fileInputRef.current?.click()}
+        />
+      </aside>
 
-      <section className="chat-shell">
+      {/* ============================================
+          STAGE
+      ============================================ */}
 
-        <div className="messages">
+      <section className="stage">
+        {/* Quickens while the pipeline is working, settles
+            when it is idle - ambient motion tied to real
+            state rather than running for its own sake. */}
+        <ParticleField intensity={isLoading ? 1 : 0} />
 
-          {messages.map(
-            (message) => (
+        <div className="stage-scroll scroll">
+          <div className="stage-inner">
+            {!hasConversation ? (
+              <EmptyState
+                hasDocument={Boolean(documentId)}
+                isBusy={isBusy}
+                onAsk={(question) => sendMessage(question)}
+              />
+            ) : (
+              messages.map((message) => {
+                /* --- Upload event row --------------- */
 
-              <div
-                key={
-                  message.id
+                if (message.documentUpload) {
+                  return (
+                    <motion.div
+                      key={message.id}
+                      className="event"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 380,
+                        damping: 28,
+                      }}
+                    >
+                      <span className="event-icon">
+                        <PdfIcon size={14} />
+                      </span>
+
+                      <span className="event-text">
+                        <strong>{message.documentUpload.name}</strong> is
+                        ready
+                      </span>
+
+                      <span className="event-meta">
+                        <CountUp value={message.documentUpload.pages} />{" "}
+                        pages
+                        <span className="meta-sep" aria-hidden="true" />
+                        <span className="meta-chunks">
+                          <CountUp value={message.documentUpload.chunks} />{" "}
+                          chunks
+                        </span>
+                      </span>
+                    </motion.div>
+                  );
                 }
-                className={`message-row ${message.role}`}
-              >
 
-                {/* ======================================
-                    USER MESSAGE
-                ====================================== */}
+                /* --- Question ----------------------- */
 
-                {message.role ===
-                  "user" && (
-
-                  <div className="user-message-content">
-
-                    <div className="message-time user-time">
-
-                      {formatTime(
-                        message.timestamp
-                      )}
-
-                    </div>
-
-
-                    {message.documentUpload ? (
-
-                      <UploadCard
-                        document={
-                          message.documentUpload
-                        }
-                      />
-
-                    ) : (
-
-                      <div className="user-bubble">
-
-                        {message.content}
-
+                if (message.role === "user") {
+                  return (
+                    <motion.div
+                      key={message.id}
+                      className="turn is-question"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      <div className="turn-margin">
+                        <span className="turn-badge">Q</span>
                       </div>
 
-                    )}
+                      <div className="question">
+                        <div className="label question-label">
+                          {formatTime(message.timestamp)}
+                        </div>
 
-                  </div>
-                )}
+                        <p className="question-text">
+                          {message.content}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                }
 
+                /* --- Answer ------------------------- */
 
-                {/* ======================================
-                    ASSISTANT MESSAGE
-                ====================================== */}
+                const isError = Boolean(message.isError);
 
-                {message.role ===
-                  "assistant" && (
+                const canAct =
+                  !message.streaming &&
+                  !isError &&
+                  message.content.trim() !== "";
 
-                  <div className="assistant-message-content">
+                return (
+                  <motion.div
+                    key={message.id}
+                    className="turn is-answer"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                  >
+                    <div className="turn-margin">
+                      <span className="turn-badge" aria-hidden="true">
+                        <span className="mark-dot" />
+                      </span>
+                    </div>
 
-                    <div className="assistant-header">
-
-                      <NimbusLogo />
-
-                      <div className="assistant-meta">
-
-                        <span className="assistant-name">
-                          Nimbus
+                    <div
+                      className={`answer ${isError ? "is-error" : ""}`}
+                    >
+                      <div className="answer-head">
+                        <span className="answer-name">Nimbus</span>
+                        <span className="answer-time">
+                          {formatTime(message.timestamp)}
                         </span>
-
-                        <span className="message-time">
-
-                          {formatTime(
-                            message.timestamp
-                          )}
-
-                        </span>
-
                       </div>
 
-                    </div>
-
-
-                    <div className="assistant-bubble">
-
-                      {message.content ? (
-
-                        <MarkdownMessage
-                          content={
-                            message.content
-                          }
-                        />
-
-                      ) : isLoading ? (
-
-                        <div className="thinking-bubble">
-
-                          <span />
-                          <span />
-                          <span />
-
-                        </div>
-
-                      ) : null}
-
-                    </div>
-
-
-                    {/* =================================
-                        SOURCES
-                    ================================= */}
-
-                    {message.sources &&
-                      message.sources.length >
-                        0 && (
-
-                      <div className="sources">
-
-                        <div className="sources-title">
-                          SOURCES
-                        </div>
-
-
-                        <div className="source-list">
-
-                          {message.sources.map(
-                            (
-                              source,
-                              index
-                            ) => {
-
-                              const page =
-                                getSourcePage(
-                                  source
-                                );
-
-
-                              if (
-                                page ==
-                                null
-                              ) {
-
-                                return null;
-                              }
-
-
-                              return (
-                                <span
-                                  className="source-chip"
-                                  key={`${page}-${index}`}
-                                >
-
-                                  {
-                                    source.source_file ||
-                                    documentName ||
-                                    "Document"
-                                  }
-
-                                  {" · Page "}
-
-                                  {page}
-
-                                </span>
+                      <div className="answer-body">
+                        {message.content ? (
+                          <Markdown
+                            content={message.content}
+                            activePage={activePage}
+                            onCite={(page) => {
+                              setActivePage(
+                                activePage === page ? null : page,
                               );
+                              setEvidenceOpen(true);
+                            }}
+                          />
+                        ) : message.streaming ? (
+                          <ReasoningLattice
+                            caption={
+                              !message.retrieved
+                                ? "Retrieving"
+                                : !message.citedPages
+                                  ? "Reading pages"
+                                  : "Composing"
                             }
+                          />
+                        ) : null}
+                      </div>
+
+                      {canAct && (
+                        <div className="acts">
+                          <button
+                            type="button"
+                            className={`act ${
+                              copiedId === message.id ? "is-done" : ""
+                            }`}
+                            onClick={() =>
+                              copyMessage(message.id, message.content)
+                            }
+                          >
+                            {copiedId === message.id ? (
+                              <CheckIcon size={13} />
+                            ) : (
+                              <CopyIcon size={13} />
+                            )}
+                            {copiedId === message.id
+                              ? "Copied"
+                              : "Copy"}
+                          </button>
+
+                          {(message.citedPages?.length ?? 0) > 0 && (
+                            <span className="cited">
+                              <span className="cited-label">
+                                Grounded in
+                              </span>
+
+                              {message.citedPages?.map((page) => (
+                                <button
+                                  key={page}
+                                  type="button"
+                                  className={`cited-chip ${
+                                    activePage === page ? "is-on" : ""
+                                  }`}
+                                  onClick={() => {
+                                    setActivePage(
+                                      activePage === page ? null : page,
+                                    );
+                                    setEvidenceOpen(true);
+                                  }}
+                                  title={`Show page ${page}`}
+                                >
+                                  p.{page}
+                                </button>
+                              ))}
+                            </span>
                           )}
-
                         </div>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
 
-                      </div>
-                    )}
-
-
-                    {/* =================================
-                        ACTIONS
-                    ================================= */}
-
-                    {message.id !==
-                      1 &&
-                      !message.content.startsWith(
-                        "I couldn't connect"
-                      ) &&
-                      message.content.trim() !==
-                        "" && (
-
-                      <div className="message-actions">
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            copyMessage(
-                              message.content
-                            )
-                          }
-                        >
-
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-
-                            <rect
-                              x="9"
-                              y="9"
-                              width="11"
-                              height="11"
-                              rx="2"
-                            />
-
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-
-                          </svg>
-
-                          Copy
-
-                        </button>
-
-
-                        <button
-                          type="button"
-                          aria-label="Helpful"
-                        >
-
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-
-                            <path d="M7 10v12" />
-
-                            <path d="M15 5.88L14 10h5.83a2 2 0 0 1 1.95 2.45l-2.25 9A2 2 0 0 1 17.58 23H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h3l4.5-7.5A2 2 0 0 1 15 5.88Z" />
-
-                          </svg>
-
-                          Helpful
-
-                        </button>
-
-
-                        <button
-                          type="button"
-                          aria-label="Not helpful"
-                        >
-
-                          <svg
-                            width="14"
-                            height="14"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.8"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
-                          >
-
-                            <path d="M17 14V2" />
-
-                            <path d="M9 18.12L10 14H4.17a2 2 0 0 1-1.95-2.45l2.25-9A2 2 0 0 1 6.42 1H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-3l-4.5 7.5A2 2 0 0 1 9 18.12Z" />
-
-                          </svg>
-
-                        </button>
-
-                      </div>
-                    )}
-
-                  </div>
-                )}
-
-              </div>
-            )
-          )}
-
-
-          <div
-            ref={
-              messagesEndRef
-            }
-          />
-
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
+        <CommandBar
+          value={input}
+          placeholder={placeholder}
+          hint={hint}
+          canSend={Boolean(input.trim()) && !isBusy && Boolean(documentId)}
+          isLoading={isLoading}
+          isUploading={isUploading}
+          isListening={isListening}
+          textareaRef={textareaRef}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          onSubmit={handleSubmit}
+          onUploadClick={() => fileInputRef.current?.click()}
+          onMicClick={startSpeechRecognition}
+        />
       </section>
 
+      {/* ============================================
+          EVIDENCE
+      ============================================ */}
 
-      {/* =================================================
-          COMPOSER
-      ================================================= */}
+      <aside
+        className={`evidence ${evidenceOpen ? "is-open" : ""}`}
+        aria-label="Evidence"
+      >
+        <EvidencePanel
+          sources={evidenceSources}
+          documentName={documentName}
+          activePage={activePage}
+          onSelect={setActivePage}
+          onClose={() => setEvidenceOpen(false)}
+        />
+      </aside>
 
-      {documents.length > 0 && (
-  <div className="documents-shelf">
+      {/* ============================================
+          OVERLAYS
+      ============================================ */}
 
-    <div className="documents-list">
-      {documents.map((document) => {
-        const isActive = document.id === documentId;
-
-        return (
-          <button
-            key={document.id}
+      <AnimatePresence>
+        {(railOpen || evidenceOpen) && (
+          <motion.button
             type="button"
-            className={`document-chip ${
-              isActive ? "active" : ""
-            }`}
-            onClick={() => selectDocument(document)}
-            disabled={isLoading || isUploading}
-            title={document.name}
-          >
-            <span className="document-chip-icon">
-              <PdfIcon />
-            </span>
-
-            <span className="document-chip-name">
-              {document.name}
-            </span>
-
-            {isActive && (
-              <span className="document-chip-dot" />
-            )}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-)}
-
-
-      <div className="composer-wrapper">
-
-        <form
-          className="composer"
-          onSubmit={
-            handleSubmit
-          }
-        >
-
-          {/* PDF INPUT */}
-
-          <input
-            ref={
-              fileInputRef
-            }
-            type="file"
-            accept="application/pdf,.pdf"
-            onChange={
-              handleFileChange
-            }
-            hidden
+            className="scrim"
+            aria-label="Close panel"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            onClick={() => {
+              setRailOpen(false);
+              setEvidenceOpen(false);
+            }}
           />
+        )}
+      </AnimatePresence>
 
-
-          {/* PLUS */}
-
-          <button
-            type="button"
-            className="composer-icon-button upload-button"
-            onClick={() =>
-              fileInputRef.current?.click()
-            }
-            disabled={
-              isLoading ||
-              isUploading
-            }
-            aria-label="Upload PDF"
-            title="Upload PDF"
-          >
-
-            {isUploading ? (
-
-              <div className="upload-loader" />
-
-            ) : (
-
-              <svg
-                width="21"
-                height="21"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-
-                <path d="M12 5v14" />
-
-                <path d="M5 12h14" />
-
-              </svg>
-
-            )}
-
-          </button>
-
-
-          {/* TEXTAREA */}
-
-          <textarea
-            ref={
-              textareaRef
-            }
-            value={
-              input
-            }
-            disabled={
-              isLoading ||
-              isUploading
-            }
-            onChange={
-              handleInputChange
-            }
-            onKeyDown={
-              (e) => {
-
-                if (
-                  e.key ===
-                    "Enter" &&
-                  !e.shiftKey
-                ) {
-
-                  e.preventDefault();
-
-                  sendMessage();
-                }
-
-              }
-            }
-            placeholder={
-              isUploading
-                ? "Uploading PDF..."
-                : isLoading
-                  ? "Nimbus is thinking..."
-                  : documentId
-                    ? "Ask Nimbus anything..."
-                    : "Upload a PDF to begin..."
-            }
-            rows={1}
+      <AnimatePresence>
+        {ingest && (
+          <IngestCinematic
+            name={ingest.name}
+            settled={ingest.settled}
+            failed={ingest.failed}
+            pages={ingest.pages}
+            chunks={ingest.chunks}
+            onDone={commitIngest}
           />
+        )}
+      </AnimatePresence>
 
-
-          {/* RIGHT ACTIONS */}
-
-          <div className="composer-actions">
-
-            {/* MICROPHONE */}
-
-            <button
-              type="button"
-              className={`mic-button ${
-                isListening
-                  ? "listening"
-                  : ""
-              }`}
-              onClick={
-                startSpeechRecognition
-              }
-              disabled={
-                isLoading ||
-                isUploading
-              }
-              aria-label="Voice input"
+      <AnimatePresence>
+        {isDragging && (
+          <motion.div
+            className="drop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.16 }}
+          >
+            <motion.div
+              className="drop-frame"
+              initial={{ scale: 0.94, y: 10 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.97 }}
+              transition={{
+                type: "spring",
+                stiffness: 340,
+                damping: 26,
+              }}
             >
-
-              <svg
-                className="mic-icon"
-                width="25"
-                height="25"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-
-                <rect
-                  x="9"
-                  y="2"
-                  width="6"
-                  height="12"
-                  rx="3"
-                />
-
-                <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
-
-                <path d="M12 19v3" />
-
-                <path d="M8 22h8" />
-
-              </svg>
-
-            </button>
-
-
-            {/* SEND */}
-
-            <button
-              type="submit"
-              className="send-button"
-              disabled={
-                isLoading ||
-                isUploading ||
-                !input.trim() ||
-                !documentId
-              }
-              aria-label="Send message"
-            >
-
-              {isLoading ? (
-
-                <div className="button-loader" />
-
-              ) : (
-
-                <svg
-                  width="19"
-                  height="19"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden="true"
-                >
-
-                  <path d="M22 2L11 13" />
-
-                  <path d="M22 2L15 22L11 13L2 9L22 2Z" />
-
-                </svg>
-
-              )}
-
-            </button>
-
-          </div>
-
-        </form>
-
-
-        {/* FOOTER */}
-
-        <div className="composer-footer">
-
-          <span>
-
-            {documentName
-              ? `${documentName} · ACTIVE DOCUMENT`
-              : "UPLOAD A PDF TO START"}
-
-          </span>
-
-
-          <span>
-            SHIFT + ENTER FOR NEW LINE
-          </span>
-
-
-          <span>
-            NIMBUS · RAG ASSISTANT
-          </span>
-
-        </div>
-
-      </div>
-
+              <PdfIcon size={34} />
+              <span className="drop-title">Drop to add</span>
+              <span className="drop-sub">PDF only</span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
-
 
 export default App;

@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nimbus &mdash; Document Intelligence</title>
+
+<!-- Archivo Black: heavy neo-grotesque display, the brutalist voice.
+     Plus Jakarta Sans + DM Mono: lifted verbatim from the product's
+     own token layer so the deck and the app set type identically. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
+
+<style>
+/* ===========================================
+   1. THEME TOKENS
+   Values mirror frontend-layer/src/styles/tokens.css.
+   Change these to re-skin the entire deck.
+   =========================================== */
+:root {
+    --paper:  #f2f2ec;   /* off-white desk                    */
+    --white:  #ffffff;   /* document surface                  */
+    --ink:    #000000;   /* every border, every shadow        */
+    --yellow: #ffe500;   /* DOCUMENT / EVIDENCE               */
+    --blue:   #0025ff;   /* MACHINE / INDEX / PIPELINE        */
+    --red:    #cf2f26;   /* failure, regression               */
+    --green:  #007f2f;   /* confirmed, shipped                */
+    --grey:   #6b6b6b;
+
+    --font-display: 'Archivo Black', 'Plus Jakarta Sans', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'DM Mono', ui-monospace, monospace;
+
+    /* Motion. Brutalism says "no smooth transitions"; taken
+       literally that kills all movement, so the rule here is
+       the same one the product uses: colour snaps, matter
+       travels — and it travels with overshoot, not easing. */
+    --pop: cubic-bezier(0.34, 1.62, 0.52, 1);
+    --snap: cubic-bezier(0.8, 0, 0.2, 1);
+
+    --stage-bg: #1a1a18;   /* letterbox colour                */
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   2. FIXED 16:9 STAGE  (viewport-base.css, verbatim)
+   Slides are authored at 1920x1080 and the whole stage
+   is scaled by one transform. Never reflow per device.
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+@media print {
+    html,
+    body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck-stage { position: static; width: auto; height: auto; transform: none !important; background: none; }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px; height: 1080px;
+        break-after: page; page-break-after: always;
+    }
+    .slide:last-child { break-after: auto; page-break-after: auto; }
+    .deck-controls { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   3. SLIDE GROUND
+   Two themes, set per slide by a modifier class.
+   Everything downstream reads --fig / --ground /
+   --shcol so a slide flips theme with one class.
+   =========================================== */
+.slide {
+    --ground: var(--paper);
+    --fig: var(--ink);
+    --card: var(--white);
+    --shcol: var(--ink);
+    --muted: #4d4d4d;
+
+    background: var(--ground);
+    font-family: var(--font-body);
+    color: var(--fig);
+    /* The product's grid-paper desk, same 36px module. */
+    background-image:
+        repeating-linear-gradient(to right, rgba(0,0,0,.055) 0 1px, transparent 1px 36px),
+        repeating-linear-gradient(to bottom, rgba(0,0,0,.055) 0 1px, transparent 1px 36px);
+}
+
+/* Inverted slides carry the same system with the figure
+   and ground swapped. Shadows go yellow because a black
+   offset block is invisible on black. */
+.slide--ink {
+    --ground: #000000;
+    --fig: #ffffff;
+    --card: #101010;
+    --shcol: var(--yellow);
+    --muted: #9a9a9a;
+    background-image:
+        repeating-linear-gradient(to right, rgba(255,255,255,.07) 0 1px, transparent 1px 36px),
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.07) 0 1px, transparent 1px 36px);
+}
+
+.pad {
+    position: absolute;
+    inset: 0;
+    padding: 84px 92px 96px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===========================================
+   4. TYPE SCALE  (authored at 1920x1080)
+   =========================================== */
+.eyebrow {
+    font-family: var(--font-mono);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--fig);
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+}
+.eyebrow::before {
+    content: "";
+    width: 34px; height: 12px;
+    background: var(--blue);
+    flex: none;
+}
+
+.s-title {
+    font-family: var(--font-display);
+    font-size: 74px;
+    line-height: .96;
+    letter-spacing: -.026em;
+    text-transform: uppercase;
+    margin-top: 20px;
+}
+.s-title.sm { font-size: 58px; }
+
+.lede {
+    font-size: 27px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--muted);
+    max-width: 1180px;
+    margin-top: 20px;
+}
+
+.mono { font-family: var(--font-mono); }
+.num  { font-variant-numeric: tabular-nums; }
+
+/* Highlighter. The product marks cited evidence in yellow,
+   so the deck marks its own key claims the same way — the
+   sweep runs left to right like a real marker stroke. */
+.hl {
+    background-image: linear-gradient(var(--yellow), var(--yellow));
+    background-repeat: no-repeat;
+    background-position: 0 88%;
+    background-size: 0% 46%;
+    color: var(--fig);
+    padding: 0 .1em;
+    transition: background-size .45s var(--snap);
+    transition-delay: calc(var(--i, 0) * 40ms + 420ms);
+}
+.slide.visible .hl { background-size: 100% 46%; }
+
+/* On any dark ground the fill cannot be relied on: mid-sweep,
+   black text sits on black. Mark with yellow type instead. */
+.slide--ink .hl,
+.blk--ink .hl {
+    color: var(--yellow);
+    background-position: 0 100%;
+    background-size: 0% 3px;
+}
+.slide.visible .slide--ink .hl,
+.slide--ink.visible .hl,
+.slide.visible .blk--ink .hl { background-size: 100% 3px; }
+
+/* ===========================================
+   5. BLOCKS
+   A block is a slab: square, thick black edge,
+   hard offset shadow. No blur exists in this deck.
+   =========================================== */
+.blk {
+    background: var(--card);
+    border: 4px solid var(--fig);
+    box-shadow: 0 0 0 var(--shcol);
+    position: relative;
+}
+.slide.visible .blk { box-shadow: 10px 10px 0 var(--shcol); }
+.blk.flat { box-shadow: none !important; }
+
+.blk--yellow { background: var(--yellow); color: #000; }
+.blk--blue   { background: var(--blue);   color: #fff; border-color: var(--fig); }
+.blk--ink    { background: #000; color: #fff; }
+.slide--ink .blk--ink { background: #fff; color: #000; }
+
+/* Hatched panel header, straight from the app's rail. */
+.hatch {
+    background-image: repeating-linear-gradient(
+        45deg, var(--fig) 0 2px, transparent 2px 9px);
+    border-bottom: 4px solid var(--fig);
+    padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.hatch .tag {
+    background: var(--yellow); color: #000;
+    font-family: var(--font-mono); font-size: 16px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    padding: 4px 10px; border: 2px solid #000;
+}
+.hatch .idx {
+    background: var(--blue); color: #fff;
+    font-family: var(--font-mono); font-size: 16px;
+    padding: 4px 10px; border: 2px solid var(--fig);
+}
+
+/* ===========================================
+   6. REVEAL CHOREOGRAPHY
+   One mechanism for the whole deck: set --i on a
+   child and it joins the stagger. Elements arrive
+   from lower-left with overshoot, so a slide reads
+   as blocks being stacked, not as a fade.
+   =========================================== */
+.rv {
+    opacity: 0;
+    transform: translate(-16px, 22px);
+    transition:
+        opacity .40s var(--pop),
+        transform .52s var(--pop),
+        box-shadow .40s var(--pop);
+    transition-delay: calc(var(--i, 0) * 68ms + 90ms);
+}
+.slide.visible .rv { opacity: 1; transform: translate(0, 0); }
+
+/* Horizontal variant for rows and table columns. */
+.rv-x { transform: translate(-34px, 0); }
+
+/* Bars grow from zero once the slide lands. */
+.bar {
+    height: 100%;
+    width: 0;
+    transition: width .85s var(--snap);
+    transition-delay: calc(var(--i, 0) * 68ms + 300ms);
+}
+.slide.visible .bar { width: var(--w); }
+
+/* ===========================================
+   7. SLIDE TRANSITION WIPE
+   A yellow slab crosses the stage on every slide
+   change, with a black slab trailing one beat
+   behind it. Snap, not fade.
+   =========================================== */
+.wipe {
+    position: absolute; inset: 0;
+    z-index: 50; pointer-events: none;
+    display: none;
+}
+.wipe.run { display: block; }
+.wipe i {
+    position: absolute; inset: 0;
+    display: block;
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+.wipe i:nth-child(1) { background: var(--yellow); }
+.wipe i:nth-child(2) { background: #000; }
+.wipe.run i:nth-child(1) { animation: wipeGo .52s var(--snap) forwards; }
+.wipe.run i:nth-child(2) { animation: wipeGo .52s var(--snap) .07s forwards; }
+
+@keyframes wipeGo {
+    0%   { transform: scaleX(0); transform-origin: left center; }
+    46%  { transform: scaleX(1); transform-origin: left center; }
+    47%  { transform: scaleX(1); transform-origin: right center; }
+    100% { transform: scaleX(0); transform-origin: right center; }
+}
+
+/* ===========================================
+   8. DECK CHROME  (outside the design system)
+   =========================================== */
+.chrome {
+    position: absolute;
+    left: 92px; right: 92px; bottom: 34px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-mono); font-size: 16px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted);
+    z-index: 4;
+}
+.chrome .pg {
+    background: var(--fig); color: var(--ground);
+    padding: 5px 12px; font-weight: 500;
+}
+.rail {
+    position: absolute; left: 0; bottom: 0;
+    height: 8px; background: var(--yellow);
+    border-top: 3px solid var(--fig);
+    z-index: 6;
+    transition: width .5s var(--snap);
+}
+
+/* Marquee ticker — a scrolling strip of run metadata.
+   Used only where a slide has room for it. */
+.mq {
+    overflow: hidden;
+    border-top: 4px solid var(--fig);
+    border-bottom: 4px solid var(--fig);
+    background: #000; color: #fff;
+    height: 52px; display: flex; align-items: center;
+}
+.slide--ink .mq { background: var(--yellow); color: #000; border-color: #fff; }
+.mq span {
+    display: inline-block; white-space: nowrap;
+    font-family: var(--font-mono); font-size: 18px;
+    letter-spacing: .18em; text-transform: uppercase;
+    animation: mqRun 26s linear infinite;
+    animation-play-state: paused;
+    padding-right: 48px;
+}
+.slide.visible .mq span { animation-play-state: running; }
+@keyframes mqRun {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* ===========================================
+   9. TITLE SLIDE
+   =========================================== */
+.t-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.t-mark {
+    display: flex; align-items: flex-end; gap: 28px; margin-bottom: 8px;
+}
+.t-logo {
+    width: 92px; height: 112px;
+    background: var(--yellow); border: 5px solid #000;
+    box-shadow: 8px 8px 0 #000;
+    position: relative; flex: none;
+}
+.t-logo::after {
+    content: ""; position: absolute; left: 16px; right: 16px; top: 22px;
+    height: 5px; background: #000;
+    box-shadow: 0 20px 0 #000, 0 40px 0 #000;
+}
+.t-name {
+    font-family: var(--font-display);
+    font-size: 208px; line-height: .8; letter-spacing: -.045em;
+    text-transform: uppercase;
+}
+.t-sub {
+    font-family: var(--font-mono); font-size: 30px;
+    letter-spacing: .34em; text-transform: uppercase;
+    margin-top: 26px; padding-left: 6px;
+}
+.t-claim {
+    font-size: 40px; font-weight: 700; line-height: 1.24;
+    margin-top: 42px; max-width: 1080px;
+}
+.t-caret {
+    display: inline-block; width: 20px; height: 38px;
+    background: var(--blue); vertical-align: -6px; margin-left: 8px;
+    animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+
+.t-meta { display: flex; gap: 16px; margin-top: 50px; flex-wrap: wrap; }
+.t-meta b {
+    font-family: var(--font-mono); font-size: 17px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase;
+    padding: 10px 16px; border: 3px solid #000; background: #fff;
+    /* Explicit: these chips are always a light fill, so the text
+       must not inherit an inverted slide's white. */
+    color: #000;
+}
+.t-meta b.on { background: var(--blue); color: #fff; }
+.t-meta b.ev { background: var(--yellow); }
+
+/* ===========================================
+   10. GENERIC GRIDS
+   =========================================== */
+.cols { display: grid; gap: 26px; flex: 1; min-height: 0; }
+.c3 { grid-template-columns: repeat(3, 1fr); }
+.c2 { grid-template-columns: repeat(2, 1fr); }
+.c4 { grid-template-columns: repeat(4, 1fr); }
+
+.card { padding: 30px 30px 32px; display: flex; flex-direction: column; }
+.card h3 {
+    font-family: var(--font-display); font-size: 31px;
+    text-transform: uppercase; letter-spacing: -.01em; line-height: 1.04;
+}
+.card p { font-size: 22px; line-height: 1.5; color: var(--muted); margin-top: 14px; }
+.card .k {
+    font-family: var(--font-mono); font-size: 15px; letter-spacing: .18em;
+    text-transform: uppercase; margin-bottom: 16px;
+}
+.blk--yellow p, .blk--yellow .k, .blk--blue p, .blk--blue .k { color: inherit; opacity: .84; }
+
+/* ===========================================
+   11. PIPELINE STRIP  (architecture slide)
+   A blue pulse travels the strip on every loop so
+   the diagram reads as a flow, not six boxes.
+   =========================================== */
+.pipe { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; }
+.stage {
+    border: 4px solid var(--fig); border-right-width: 0;
+    background: var(--card); padding: 22px 20px 24px;
+    position: relative; overflow: hidden;
+}
+.stage:last-child { border-right-width: 4px; }
+.stage .n {
+    font-family: var(--font-mono); font-size: 16px; font-weight: 500;
+    background: var(--fig); color: var(--ground);
+    display: inline-block; padding: 3px 9px; letter-spacing: .1em;
+}
+.stage h4 {
+    font-family: var(--font-display); font-size: 24px;
+    text-transform: uppercase; margin-top: 14px; letter-spacing: -.012em;
+}
+.stage p { font-family: var(--font-mono); font-size: 15px; line-height: 1.55; color: var(--muted); margin-top: 10px; }
+/* travelling pulse */
+.stage::after {
+    content: ""; position: absolute; left: 0; bottom: 0;
+    height: 7px; width: 100%; background: var(--blue);
+    transform: scaleX(0); transform-origin: left;
+    animation: pulseGo 4.8s linear infinite;
+    animation-delay: calc(var(--s) * .6s);
+}
+@keyframes pulseGo {
+    0%   { transform: scaleX(0); transform-origin: left; }
+    8%   { transform: scaleX(1); transform-origin: left; }
+    14%  { transform: scaleX(1); transform-origin: right; }
+    22%  { transform: scaleX(0); transform-origin: right; }
+    100% { transform: scaleX(0); transform-origin: right; }
+}
+
+.runtime { display: flex; align-items: stretch; gap: 0; margin-top: 4px; }
+.rt {
+    flex: 1; border: 4px solid var(--fig); border-right-width: 0;
+    padding: 18px 22px; background: var(--card);
+}
+.rt:last-child { border-right-width: 4px; }
+.rt b { font-family: var(--font-display); font-size: 22px; text-transform: uppercase; display: block; }
+.rt span { font-family: var(--font-mono); font-size: 15px; color: var(--muted); }
+.rt.mid { background: var(--blue); color: #fff; }
+.rt.mid span { color: rgba(255,255,255,.8); }
+
+/* ===========================================
+   12. DATA TABLES
+   =========================================== */
+.tbl { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tbl th {
+    font-family: var(--font-mono); font-size: 16px; font-weight: 500;
+    letter-spacing: .16em; text-transform: uppercase;
+    text-align: right; padding: 12px 16px;
+    background: var(--blue); color: #fff;
+    border: 3px solid var(--fig);
+}
+.tbl th:first-child { text-align: left; }
+.tbl td {
+    font-size: 21px; padding: 13px 16px; text-align: right;
+    border: 3px solid var(--fig); background: var(--card);
+    font-family: var(--font-mono);
+}
+.tbl td:first-child { text-align: left; font-family: var(--font-body); font-weight: 600; }
+.tbl td.prose { text-align: left; font-family: var(--font-body); font-weight: 500; }
+.tbl td.tech { text-align: left; }
+.tbl td.role { white-space: nowrap; }
+.tbl.roomy td { padding: 30px 16px; }
+.tbl tr.win td { background: var(--yellow); color: #000; font-weight: 500; }
+.tbl tr.win td:first-child { font-weight: 800; }
+.tbl td.bad { color: var(--red); font-weight: 500; }
+.tbl td.good { color: var(--green); font-weight: 500; }
+
+/* ===========================================
+   13. SCORECARD  (the centrepiece)
+   Three tiers, visually ranked: tier 1 is a slab of
+   big numbers, tier 2 is quieter, tier 3 is struck
+   through because those metrics are retired.
+   =========================================== */
+.tier { display: flex; flex-direction: column; gap: 12px; }
+.tier-head {
+    display: flex; align-items: baseline; gap: 16px;
+    border-bottom: 4px solid var(--fig); padding-bottom: 9px;
+}
+.tier-head .no {
+    font-family: var(--font-display); font-size: 27px;
+    background: var(--fig); color: var(--ground); padding: 2px 12px;
+}
+.tier-head h3 {
+    font-family: var(--font-display); font-size: 27px;
+    text-transform: uppercase; letter-spacing: -.01em;
+}
+.tier-head em {
+    font-style: normal; font-family: var(--font-mono);
+    font-size: 16px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-left: auto;
+}
+
+.metrics { display: grid; gap: 14px; }
+.m {
+    border: 4px solid var(--fig); background: var(--card);
+    padding: 16px 20px 18px;
+    box-shadow: 0 0 0 var(--shcol);
+}
+.slide.visible .m { box-shadow: 7px 7px 0 var(--shcol); }
+.m .lbl {
+    font-family: var(--font-mono); font-size: 15px; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--muted); display: block;
+}
+.m .val {
+    font-family: var(--font-display); font-size: 70px; line-height: 1;
+    letter-spacing: -.03em; margin-top: 10px; display: block;
+    font-variant-numeric: tabular-nums;
+}
+.m .note { font-family: var(--font-mono); font-size: 14px; color: var(--muted); display: block; margin-top: 6px; }
+.m.hero { background: var(--yellow); color: #000; }
+.m.hero .lbl, .m.hero .note { color: rgba(0,0,0,.66); }
+.m.mid .val { font-size: 58px; }
+.m.mid { padding: 18px 20px 20px; }
+
+/* Retired tier: present, dimmed, and struck. Keeping
+   them visible is the point — they were reported once. */
+.retired { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.ret {
+    border: 4px dashed var(--fig); padding: 12px 16px 14px;
+    background: transparent; opacity: .72;
+}
+.ret .lbl {
+    font-family: var(--font-mono); font-size: 15px; letter-spacing: .12em;
+    text-transform: uppercase; text-decoration: line-through;
+    text-decoration-thickness: 2px;
+}
+.ret .val { font-family: var(--font-display); font-size: 31px; margin-top: 6px; display: block; }
+.ret .why { font-family: var(--font-mono); font-size: 14px; color: var(--muted); display: block; margin-top: 4px; }
+
+/* ===========================================
+   14. PER-QUESTION TABLE
+   =========================================== */
+.qt { width: 100%; border-collapse: collapse; }
+.qt th {
+    font-family: var(--font-mono); font-size: 13px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase;
+    background: #000; color: #fff; padding: 8px 10px; text-align: right;
+    border: 2px solid #000;
+}
+.qt th:first-child, .qt th:nth-child(2) { text-align: left; }
+.qt td {
+    font-size: 19px; padding: 9px 11px; text-align: right;
+    border: 2px solid #000; background: var(--card);
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+}
+.qt td:nth-child(2) { text-align: left; font-family: var(--font-body); font-weight: 600; font-size: 20px; }
+.qt td:first-child { text-align: center; color: var(--muted); width: 44px; }
+.qt tr.lo td { background: #ffe9e8; }
+.qt tr.flag td { background: var(--yellow); }
+.qt td .pill {
+    display: inline-block; min-width: 54px; padding: 1px 7px;
+    border: 2px solid #000; font-weight: 500;
+}
+.qt td .pill.a { background: var(--yellow); }
+.qt td .pill.z { background: #000; color: #fff; }
+
+/* ===========================================
+   15. BIG-STAT + DELTA BARS  (entity-trap slide)
+   =========================================== */
+.stat {
+    font-family: var(--font-display); font-size: 168px; line-height: .86;
+    letter-spacing: -.045em; font-variant-numeric: tabular-nums;
+}
+.stat small { font-size: 62px; letter-spacing: -.02em; }
+
+.bars { display: flex; flex-direction: column; gap: 18px; }
+.brow { display: grid; grid-template-columns: 250px 1fr 108px; align-items: center; gap: 18px; }
+.brow .nm { font-family: var(--font-mono); font-size: 17px; letter-spacing: .1em; text-transform: uppercase; }
+.brow .track {
+    height: 42px; border: 4px solid var(--fig); background: var(--card);
+    overflow: hidden;
+}
+.brow .v {
+    font-family: var(--font-display); font-size: 27px; text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+.bar.y { background: var(--yellow); }
+.bar.b { background: var(--blue); }
+.bar.r { background: var(--red); }
+
+/* ===========================================
+   16. PRODUCT SLIDE
+   =========================================== */
+.shot {
+    border: 5px solid #000; background: #fff;
+    box-shadow: 0 0 0 #000; line-height: 0;
+    transition: box-shadow .5s var(--pop) .3s;
+}
+.slide.visible .shot { box-shadow: 16px 16px 0 #000; }
+.shot img { width: 100%; height: auto; display: block; }
+
+.notes { display: flex; flex-direction: column; gap: 18px; }
+.note-i { border: 4px solid #000; background: #fff; padding: 16px 20px; box-shadow: 0 0 0 #000; }
+.slide.visible .note-i { box-shadow: 6px 6px 0 #000; }
+.note-i b { font-family: var(--font-display); font-size: 21px; text-transform: uppercase; display: block; }
+.note-i > span { font-size: 18px; line-height: 1.45; color: var(--muted); display: block; margin-top: 6px; }
+.note-i > span .mono { display: inline; font-size: inherit; }
+.note-i.ev { background: var(--yellow); }
+.note-i.ev > span { color: rgba(0,0,0,.72); }
+.note-i.mc { background: var(--blue); color: #fff; }
+.note-i.mc > span { color: rgba(255,255,255,.82); }
+
+/* ===========================================
+   17. CLOSING
+   =========================================== */
+.close-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+.close-line {
+    font-family: var(--font-display); font-size: 92px; line-height: 1.02;
+    letter-spacing: -.032em; text-transform: uppercase; max-width: 1560px;
+}
+.close-sub { font-family: var(--font-mono); font-size: 24px; letter-spacing: .22em; text-transform: uppercase; margin-top: 40px; color: var(--muted); }
+
+/* ===========================================
+   18. EDIT MODE  (post-draft affordance)
+   =========================================== */
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle {
+    position: fixed; top: 18px; left: 18px;
+    width: 46px; height: 46px; font-size: 20px; cursor: pointer;
+    background: var(--yellow); border: 3px solid #000; box-shadow: 4px 4px 0 #000;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease; z-index: 10001;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { background: var(--blue); }
+body.editing [contenteditable="true"]:hover { outline: 3px dashed var(--blue); outline-offset: 3px; }
+body.editing [contenteditable="true"]:focus { outline: 3px solid var(--blue); outline-offset: 3px; }
+.edit-hint {
+    position: fixed; bottom: 18px; left: 18px; z-index: 10001;
+    background: #000; color: #fff; font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: .1em; text-transform: uppercase; padding: 8px 12px;
+    display: none;
+}
+body.editing .edit-hint { display: block; }
+
+/* Reset an inactive slide instantly. Without this the reveal
+   stagger plays backwards on exit and collides with the next
+   slide's entrance. */
+.slide:not(.visible) .rv,
+.slide:not(.visible) .blk,
+.slide:not(.visible) .m,
+.slide:not(.visible) .bar,
+.slide:not(.visible) .hl,
+.slide:not(.visible) .shot,
+.slide:not(.visible) .note-i { transition: none !important; }
+
+
+/* ===========================================
+   19. ARCHITECTURE DIAGRAM
+   Three lanes, left to right. No crossing lines:
+   everything reads in one direction.
+   =========================================== */
+.arch { display: grid; grid-template-columns: 1fr 58px 1fr 58px 1fr; align-items: stretch; }
+.lane { border: 4px solid var(--fig); background: var(--card); display: flex; flex-direction: column; }
+.lane-hd {
+    background: var(--fig); color: var(--ground);
+    padding: 11px 16px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+}
+.lane-hd b { font-family: var(--font-display); font-size: 22px; text-transform: uppercase; }
+.lane-hd span {
+    font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: .1em; text-transform: uppercase; opacity: .78;
+}
+.lane-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; flex: 1; justify-content: space-between; }
+.node { border: 3px solid var(--fig); padding: 16px 15px; background: var(--card); }
+.node b { font-family: var(--font-display); font-size: 18px; text-transform: uppercase; display: block; }
+.node span { font-family: var(--font-mono); font-size: 13px; color: var(--muted); display: block; margin-top: 4px; }
+.node.key { background: var(--yellow); color: #000; }
+.node.key span { color: rgba(0,0,0,.72); }
+.node.mach { background: var(--blue); color: #fff; }
+.node.mach span { color: rgba(255,255,255,.82); }
+.node.stop { background: var(--red); color: #fff; }
+.node.stop span { color: rgba(255,255,255,.86); }
+.arrow {
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 40px; color: var(--fig);
+}
+
+/* Checklist used on "what we built" and "proof it works" */
+.check { display: flex; gap: 16px; align-items: flex-start; }
+.check .tick {
+    flex: none; width: 34px; height: 34px; background: var(--yellow);
+    border: 3px solid var(--ink); display: flex; align-items: center;
+    justify-content: center; font-family: var(--font-display); font-size: 18px; color: #000;
+}
+.check p { font-size: 21px; line-height: 1.45; margin: 0; }
+.check p b { font-weight: 800; }
+
+/* Horizontal bar used by the chunking lab */
+.lab { display: grid; grid-template-columns: 300px 1fr 104px; align-items: center; gap: 22px; }
+.lab .nm b {
+    font-family: var(--font-mono); font-size: 19px; font-weight: 500;
+    letter-spacing: .06em; text-transform: uppercase; display: block;
+}
+.lab .nm span {
+    font-size: 16px; color: var(--muted); display: block; margin-top: 5px; line-height: 1.3;
+}
+.lab .track { height: 76px; border: 4px solid var(--fig); background: var(--card); overflow: hidden; }
+.lab .v { font-family: var(--font-display); font-size: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- =======================================================
+     SLIDE 1 — TITLE
+     ======================================================= -->
+<section class="slide active" data-t="Nimbus">
+  <div class="pad">
+    <div class="t-wrap">
+      <div class="rv" style="--i:0; margin-bottom:26px;">
+        <span class="eyebrow">Use case 03 &middot; Retrieval &amp; RAG</span>
+      </div>
+      <div class="t-mark">
+        <div class="t-logo rv" style="--i:1"></div>
+        <h1 class="t-name rv" style="--i:2">Nimbus</h1>
+      </div>
+      <div class="t-sub rv" style="--i:3">Document Intelligence Assistant</div>
+      <p class="t-claim rv" style="--i:4">
+        Upload a PDF. Ask a question. Get an answer with
+        <span class="hl" style="--i:4">the page number attached</span><span class="t-caret"></span>
+      </p>
+      <div class="t-meta">
+        <b class="rv" style="--i:6">Parse &middot; chunk &middot; embed</b>
+        <b class="rv on" style="--i:7">Vector search</b>
+        <b class="rv" style="--i:8">Grounded generation</b>
+        <b class="rv ev" style="--i:9">Page citations</b>
+        <b class="rv" style="--i:10">Honest refusal</b>
+      </div>
+      <p class="rv" style="--i:11; margin-top:38px; font-family:var(--font-mono); font-size:21px;
+         letter-spacing:.16em; text-transform:uppercase; color:var(--muted);">
+        Team No. 5 &nbsp;&middot;&nbsp; Sujay &nbsp;&middot;&nbsp; Mahesh &nbsp;&middot;&nbsp; Yamini &nbsp;&middot;&nbsp; Siva Prasad
+      </p>
+    </div>
+    <div class="mq rv" style="--i:12">
+      <span>Upload a PDF &nbsp;&rarr;&nbsp; parse &nbsp;&rarr;&nbsp; chunk &nbsp;&rarr;&nbsp; embed &nbsp;&rarr;&nbsp; index &nbsp;&rarr;&nbsp; retrieve &nbsp;&rarr;&nbsp; answer from the evidence &nbsp;&rarr;&nbsp; cite the page &nbsp;&middot;&nbsp; or say it isn't there &nbsp;&middot;&nbsp; Upload a PDF &nbsp;&rarr;&nbsp; parse &nbsp;&rarr;&nbsp; chunk &nbsp;&rarr;&nbsp; embed &nbsp;&rarr;&nbsp; index &nbsp;&rarr;&nbsp; retrieve &nbsp;&rarr;&nbsp; answer from the evidence &nbsp;&rarr;&nbsp; cite the page &nbsp;&middot;&nbsp; or say it isn't there &nbsp;&middot;&nbsp; </span>
+    </div>
+  </div>
+</section>
+
+<!-- =======================================================
+     SLIDE 2 — THE REAL-WORLD PROBLEM
+     ======================================================= -->
+<section class="slide" data-t="Problem">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">The real-world problem</span></div>
+    <h2 class="s-title rv" style="--i:1">The answer is in the document.<br>Finding it is the work.</h2>
+    <p class="lede rv" style="--i:2">
+      People lose hours hunting through PDFs &mdash; HR policies, product manuals, audit reports,
+      insurance documents, annual reports. The information is right there. Getting to it is the job.
+    </p>
+
+    <div class="cols c3" style="margin-top:44px; flex:0 0 auto;">
+      <div class="card blk rv" style="--i:3">
+        <span class="k">Why it is hard &middot; 01</span>
+        <h3>Documents are long</h3>
+        <p>An annual report runs to eighty pages. The one sentence you need is on page 36, inside a table,
+        and you do not know that yet.</p>
+      </div>
+      <div class="card blk rv" style="--i:4">
+        <span class="k">Why it is hard &middot; 02</span>
+        <h3>Search finds words, not answers</h3>
+        <p>Ctrl+F matches the letters you typed. It cannot read a table, follow a heading, or tell you
+        which of forty matches is the one that answers your question.</p>
+      </div>
+      <div class="card blk blk--blue rv" style="--i:5">
+        <span class="k">Why it is hard &middot; 03</span>
+        <h3>A confident guess is worse than nothing</h3>
+        <p>A chatbot that invents a plausible number is more dangerous than one that finds nothing,
+        because you cannot tell the difference.</p>
+      </div>
+    </div>
+
+    <div class="blk blk--ink rv" style="--i:6; margin-top:auto; padding:24px 30px;">
+      <p style="font-size:27px; font-weight:700; line-height:1.4;">
+        Nimbus: upload the PDF, ask in plain English, and get an answer with
+        <span class="hl" style="--i:6">the page it came from</span> &mdash; or an honest
+        &ldquo;that is not in this document&rdquo;.
+      </p>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; The problem</span><span class="pg">02</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 3 — WHAT WE BUILT
+     Mapped one-to-one onto the use-case brief.
+     ======================================================= -->
+<section class="slide" data-t="Built">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Deliverables</span></div>
+    <h2 class="s-title sm rv" style="--i:1">What we built</h2>
+
+    <div class="cols c2" style="margin-top:34px; gap:38px; align-items:start;">
+      <div class="card blk rv" style="--i:2; padding:30px 32px;">
+        <span class="k">Asked for in the brief</span>
+        <div style="display:flex; flex-direction:column; gap:20px; margin-top:20px;">
+          <div class="check"><span class="tick">&#10003;</span><p><b>Upload a PDF at runtime</b>, then parse, chunk, embed and store it in a vector index.</p></div>
+          <div class="check"><span class="tick">&#10003;</span><p><b>Retrieve the top matching chunks</b>, answer strictly from them, and cite page numbers inline.</p></div>
+          <div class="check"><span class="tick">&#10003;</span><p><b>Refuse instead of guessing</b> when the evidence does not support an answer.</p></div>
+          <div class="check"><span class="tick">&#10003;</span><p><b>A chunking lab</b> comparing 256, 512 and 1024 tokens on the same set of questions.</p></div>
+          <div class="check"><span class="tick">&#10003;</span><p><b>A source panel</b> showing the exact retrieved text behind every answer.</p></div>
+        </div>
+      </div>
+
+      <div class="card blk blk--yellow rv" style="--i:3; padding:30px 32px;">
+        <span class="k">What we added beyond it</span>
+        <h3 style="font-size:29px;">Three things the brief did not ask for</h3>
+        <div style="display:flex; flex-direction:column; gap:20px; margin-top:22px;">
+          <div class="check"><span class="tick" style="background:#000; color:var(--yellow);">+</span>
+            <p style="color:rgba(0,0,0,.86);"><b>A second ranking pass.</b> A reranker re-reads the top candidates
+            and its opinion is combined with the search result, rather than trusting either alone.</p></div>
+          <div class="check"><span class="tick" style="background:#000; color:var(--yellow);">+</span>
+            <p style="color:rgba(0,0,0,.86);"><b>Citations are verified, not trusted.</b> Every page number the model
+            writes is checked against the pages it was actually shown. If one fails, the answer is thrown away.</p></div>
+          <div class="check"><span class="tick" style="background:#000; color:var(--yellow);">+</span>
+            <p style="color:rgba(0,0,0,.86);"><b>A larger test set.</b> The brief asks for 20 questions; we scored
+            24 &mdash; 18 the document can answer and 6 it cannot, to test refusal properly.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="blk blk--ink rv" style="--i:4; margin-top:auto; padding:24px 30px;">
+      <p style="font-size:27px; font-weight:700; line-height:1.4;">
+        All of it runs on a PDF uploaded at runtime. Nothing is pre-indexed, and
+        <span class="hl" style="--i:4">the answer is never written before the evidence is found.</span>
+      </p>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; What we built</span><span class="pg">03</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 4 — ARCHITECTURE
+     Three lanes, one direction of travel. Generated in CSS
+     so it restyles with the rest of the deck.
+     ======================================================= -->
+<section class="slide" data-t="Architecture">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">System architecture</span></div>
+    <h2 class="s-title sm rv" style="--i:1">How a question becomes a cited answer</h2>
+
+    <div class="arch rv" style="--i:2; margin-top:30px; flex:0 0 auto;">
+
+      <div class="lane">
+        <div class="lane-hd"><b>1 &middot; Ingest</b><span>once per PDF</span></div>
+        <div class="lane-body">
+          <div class="node"><b>Upload</b><span>PDF arrives at runtime</span></div>
+          <div class="node"><b>Parse</b><span>PyMuPDF &middot; text kept with its page number</span></div>
+          <div class="node"><b>Chunk</b><span>512 tokens, 50 overlap</span></div>
+          <div class="node"><b>Embed</b><span>MiniLM &middot; each chunk becomes a vector</span></div>
+          <div class="node key"><b>Vector index</b><span>FAISS &middot; searchable in memory</span></div>
+        </div>
+      </div>
+
+      <div class="arrow">&rarr;</div>
+
+      <div class="lane">
+        <div class="lane-hd"><b>2 &middot; Retrieve</b><span>per question</span></div>
+        <div class="lane-body">
+          <div class="node"><b>Question</b><span>asked in plain English</span></div>
+          <div class="node"><b>Embed the question</b><span>same model, same vector space</span></div>
+          <div class="node mach"><b>Search the index</b><span>nearest chunks by meaning, not keywords</span></div>
+          <div class="node mach"><b>Rerank</b><span>a second model re-reads the candidates</span></div>
+          <div class="node key"><b>Top 5 chunks</b><span>the only evidence that moves on</span></div>
+        </div>
+      </div>
+
+      <div class="arrow">&rarr;</div>
+
+      <div class="lane">
+        <div class="lane-hd"><b>3 &middot; Ground</b><span>per answer</span></div>
+        <div class="lane-body">
+          <div class="node"><b>Claude</b><span>sees the 5 chunks and nothing else</span></div>
+          <div class="node"><b>Cite the page</b><span>every fact carries its source</span></div>
+          <div class="node"><b>Verify the citations</b><span>checked against what was retrieved</span></div>
+          <div class="node stop"><b>Fails? Refuse</b><span>the answer is discarded, not shown</span></div>
+          <div class="node key"><b>Answer + sources</b><span>streamed back to the browser</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="runtime rv" style="--i:3; margin-top:auto;">
+      <div class="rt"><b>React &middot; TypeScript</b><span>upload &middot; chat &middot; source panel</span></div>
+      <div class="rt mid"><b>Node.js &middot; Express</b><span>API gateway &middot; file handling &middot; streaming</span></div>
+      <div class="rt"><b>Python &middot; FastAPI</b><span>PyMuPDF &middot; MiniLM &middot; FAISS &middot; reranker &middot; Claude</span></div>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Architecture</span><span class="pg">04</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 5 — TECHNOLOGY STACK
+     The explicit layer / implementation / role table, plus
+     what is deliberately absent from the stack.
+     ======================================================= -->
+<section class="slide" data-t="Stack">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Implementation map</span></div>
+    <h2 class="s-title sm rv" style="--i:1">Technology stack, layer by layer</h2>
+
+    <div class="rv" style="--i:2; margin-top:32px;">
+      <table class="tbl roomy">
+        <thead><tr><th>Layer</th><th>Current implementation</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>Frontend</td><td class="tech">React &middot; TypeScript &middot; Motion &middot; Browser File API &middot; Fetch / SSE</td><td class="role">Upload, query, stream</td></tr>
+          <tr><td>Backend</td><td class="tech">Node.js &middot; Express &middot; REST APIs &middot; SSE proxying &middot; CORS &middot; request validation</td><td class="role">Orchestration</td></tr>
+          <tr class="win"><td>AI / document intelligence</td><td class="tech">Python &middot; FastAPI &middot; PyMuPDF &middot; sentence-transformers &middot; all-MiniLM-L6-v2 &middot; FAISS &middot; CrossEncoder &middot; Anthropic Claude</td><td class="role">Parse, retrieve, answer</td></tr>
+          <tr><td>Evaluation</td><td class="tech">Python scripts &middot; 24-case gold set &middot; answer metrics &middot; retrieval metrics &middot; citation metrics &middot; refusal evaluation</td><td class="role">Measure quality</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lede rv" style="--i:3; margin-top:22px; font-size:24px;">
+      The stack is deliberately explicit: <span class="hl" style="--i:3">no unimplemented framework or vector
+      database is implied.</span>
+    </p>
+
+    <div class="blk blk--ink rv" style="--i:4; margin-top:auto; padding:24px 30px;">
+      <p style="font-size:27px; font-weight:700; line-height:1.4;">
+        Four layers, three processes, one vector index &mdash;
+        <span class="hl" style="--i:4">all of it running locally, and reproducible from the repository.</span>
+      </p>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Technology stack</span><span class="pg">05</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 6 — THE CHUNKING LAB
+     Required deliverable. Numbers are production-stack recall
+     on the current 24-case gold set, at matched token budget.
+     ======================================================= -->
+<section class="slide" data-t="Chunking">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">The chunking lab</span></div>
+    <h2 class="s-title sm rv" style="--i:1">How big should a chunk be?</h2>
+    <p class="lede rv" style="--i:2">
+      Same document, same questions, same pipeline. Each setting was given the same total amount of
+      retrieved text, so nothing wins just by being handed more. The bar is how often the page holding
+      the answer came back.
+    </p>
+
+    <div style="margin-top:34px; display:flex; flex-direction:column; gap:20px;">
+      <div class="lab rv" style="--i:3">
+        <div class="nm"><b>256 / 25</b><span>230 chunks &middot; 9 retrieved</span></div>
+        <div class="track"><div class="bar b" style="--w:87%; --i:3"></div></div>
+        <span class="v">87%</span>
+      </div>
+      <div class="lab rv" style="--i:4">
+        <div class="nm"><b>512 / 50 &nbsp;&larr; shipped</b><span>127 chunks &middot; 5 retrieved</span></div>
+        <div class="track"><div class="bar y" style="--w:87%; --i:4"></div></div>
+        <span class="v">87%</span>
+      </div>
+      <div class="lab rv" style="--i:5">
+        <div class="nm"><b>1024 / 100</b><span>78 chunks &middot; 3 retrieved</span></div>
+        <div class="track"><div class="bar b" style="--w:69%; --i:5"></div></div>
+        <span class="v">69%</span>
+      </div>
+    </div>
+
+    <div class="rv" style="--i:6; margin-top:30px; border-top:4px solid var(--fig); padding-top:20px;
+         display:grid; grid-template-columns:300px 1fr; gap:22px; align-items:center;">
+      <div class="nm"><b style="font-family:var(--font-mono); font-size:19px; letter-spacing:.06em;
+        text-transform:uppercase;">Overlap, at 512</b>
+        <span style="font-size:16px; color:var(--muted); display:block; margin-top:5px;">how much each chunk repeats of the last</span></div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px;">
+        <div class="blk" style="padding:12px 16px; border-width:3px;">
+          <span class="mono" style="font-size:15px; color:var(--muted);">none</span>
+          <div style="font-family:var(--font-display); font-size:30px;">87%</div>
+        </div>
+        <div class="blk blk--yellow" style="padding:12px 16px; border-width:3px;">
+          <span class="mono" style="font-size:15px;">10% &mdash; shipped</span>
+          <div style="font-family:var(--font-display); font-size:30px;">87%</div>
+        </div>
+        <div class="blk" style="padding:12px 16px; border-width:3px;">
+          <span class="mono" style="font-size:15px; color:var(--muted);">20%</span>
+          <div style="font-family:var(--font-display); font-size:30px; color:var(--red);">80%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cols c2" style="margin-top:auto; gap:26px; flex:0 0 auto; padding-bottom:4px;">
+      <div class="card blk blk--yellow rv" style="--i:7; padding:22px 26px;">
+        <h3 style="font-size:26px;">They tied, so we chose on cost</h3>
+        <p style="font-size:21px; color:rgba(0,0,0,.84);">256 and 512 reach the same 87%. We shipped 512
+        because it gets there with <strong>127 chunks instead of 230</strong>, and sends the model
+        <strong>5 chunks instead of 9</strong> &mdash; half the index, and a shorter prompt with less
+        distracting text.</p>
+      </div>
+      <div class="card blk rv" style="--i:8; padding:22px 26px;">
+        <h3 style="font-size:26px;">Both extremes lose</h3>
+        <p style="font-size:21px;">At 1024 one useful sentence sits in a page of unrelated text, and that text
+        drags the match away from the question. And more overlap is not better &mdash; at 20% the chunks repeat
+        so much that they crowd out distinct pages.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Chunking lab</span><span class="pg">06</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 7 — GROUNDED ANSWERS AND HONEST REFUSAL
+     ======================================================= -->
+<section class="slide" data-t="Runtime">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Runtime experience</span></div>
+    <h2 class="s-title sm rv" style="--i:1">Every claim carries its page</h2>
+
+    <div style="display:grid; grid-template-columns:1120px 1fr; gap:36px; margin-top:26px; flex:1; min-height:0; align-items:start;">
+      <div class="shot rv" style="--i:2">
+        <img src="assets/nimbus-ui.png" alt="The Nimbus interface: a document shelf on the left, a grounded answer with inline page citations in the middle, and the retrieved source text on the right">
+      </div>
+
+      <div class="notes">
+        <div class="note-i ev rv" style="--i:3">
+          <b>Yellow means evidence</b>
+          <span>Inline page markers, the cited-page chips under the answer, and the source cards all wear the same
+          colour. Click a marker and the source it points at lights up.</span>
+        </div>
+        <div class="note-i rv" style="--i:4">
+          <b>The source panel shows the real text</b>
+          <span>Not a summary of the source &mdash; the actual retrieved passage, so you can check the answer against
+          it without opening the PDF.</span>
+        </div>
+        <div class="note-i mc rv" style="--i:5">
+          <b>One document at a time</b>
+          <span>Every upload stays on the shelf, but exactly one is active per question, so it is always clear
+          what is being searched.</span>
+        </div>
+        <div class="note-i rv" style="--i:6">
+          <b>And it says no</b>
+          <span style="font-family:var(--font-mono); font-size:16px; line-height:1.6; color:var(--ink);
+                display:block; border-left:5px solid var(--red); padding-left:14px; margin-top:10px;">
+            Q &mdash; What was revenue in fiscal year 2035?<br>
+            A &mdash; &ldquo;The information cannot be determined from the document. The provided evidence only
+            contains revenue data for fiscal years 2023, 2024, and 2025.&rdquo;
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Runtime</span><span class="pg">07</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 8 — PROOF IT WORKS
+     The brief's definition of done, answered directly.
+     Three headline numbers, no more.
+     ======================================================= -->
+<section class="slide" data-t="Proof">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Proof it works</span></div>
+    <h2 class="s-title sm rv" style="--i:1">Definition of done, and whether we met it</h2>
+
+    <div class="cols c2" style="margin-top:34px; gap:38px; align-items:start;">
+      <div class="card blk rv" style="--i:2; padding:30px 32px;">
+        <span class="k">The brief said</span>
+        <div style="display:flex; flex-direction:column; gap:22px; margin-top:20px;">
+          <div class="check"><span class="tick">&#10003;</span>
+            <p><b>Every answer cites a page number.</b> Enforced in code &mdash; an answer whose citations do not
+            check out is replaced by a refusal before anyone sees it.</p></div>
+          <div class="check"><span class="tick">&#10003;</span>
+            <p><b>Out-of-scope questions are refused, not invented.</b> Six questions the document cannot answer;
+            six correct refusals. Four of them were deliberately plausible.</p></div>
+          <div class="check"><span class="tick">&#10003;</span>
+            <p><b>A gold set scored for faithfulness.</b> 24 questions with verified answers, re-scoreable at any
+            time by running one command.</p></div>
+          <div class="check"><span class="tick">&#10003;</span>
+            <p><b>Best chunking config reported with evidence.</b> 512 tokens with 50 overlap. It tied with
+            256 on quality, so we chose the one that indexes half as many chunks.</p></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:26px;">
+        <div class="m hero rv" style="--i:3; padding:30px 30px;">
+          <span class="lbl">Answers matching the verified answer</span>
+          <span class="val" data-count="83" data-dec="0">83</span>
+          <span class="note">out of 100 &mdash; and this is a floor: the scorer marks down a correct answer
+          written in different words</span>
+        </div>
+        <div class="m rv" style="--i:4; padding:30px 30px;">
+          <span class="lbl">Figures traced back to the document</span>
+          <span class="val"><span data-count="100" data-dec="0">100</span>%</span>
+          <span class="note">every number in every answer came from retrieved text &mdash; nothing invented</span>
+        </div>
+        <div class="m rv" style="--i:5; padding:30px 30px;">
+          <span class="lbl">Correct refusals</span>
+          <span class="val">6 / 6</span>
+          <span class="note">it never once guessed at something the document does not contain</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Proof it works</span><span class="pg">08</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 9 — CHALLENGES AND FIXES
+     ======================================================= -->
+<section class="slide" data-t="Challenges">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Engineering retrospective</span></div>
+    <h2 class="s-title sm rv" style="--i:1">What went wrong, and what we did about it</h2>
+
+    <div class="rv" style="--i:2; margin-top:32px;">
+      <table class="tbl">
+        <thead><tr><th>What went wrong</th><th>What we did</th></tr></thead>
+        <tbody>
+          <tr><td>The right page was often missed</td><td class="prose">Stopped trusting one ranking method. We search by meaning, re-rank with a second model, and combine both opinions &mdash; which beats either one alone.</td></tr>
+          <tr><td>Financial pages ranked too low</td><td class="prose">Taught the ranker to notice metrics, years and statement terms, so a table of figures is not outranked by prose about figures.</td></tr>
+          <tr><td>One page crowded out all the others</td><td class="prose">Capped how many chunks a single page can contribute, so the evidence spans the document instead of clustering.</td></tr>
+          <tr class="win"><td>The model could cite a page it was never shown</td><td class="prose">Every page number in the answer is checked against the pages actually retrieved. If one does not match, the whole answer is discarded and a refusal is returned.</td></tr>
+          <tr><td>Naming the company broke the search</td><td class="prose">In a document about one company, its name is on every page &mdash; so it tells the search nothing while dominating the question. We remove it before searching.</td></tr>
+          <tr><td>You could not tell which PDF was active</td><td class="prose">A document shelf showing every upload, with exactly one active per question.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="blk blk--ink rv" style="--i:3; margin-top:44px; padding:24px 30px;">
+      <p style="font-size:28px; font-weight:700; line-height:1.34;">
+        Nimbus makes the evidence path visible &mdash; from the uploaded page to the validated answer.</p>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Challenges</span><span class="pg">09</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 10 — FUTURE ENHANCEMENTS
+     ======================================================= -->
+<section class="slide" data-t="Future">
+  <div class="pad">
+    <div class="rv" style="--i:0"><span class="eyebrow">Beyond the current build</span></div>
+    <h2 class="s-title sm rv" style="--i:1">Future enhancements</h2>
+    <p class="lede rv" style="--i:2">Planned, not built. Listed so the line between the two stays clear.</p>
+
+    <div class="cols c2" style="margin-top:36px; gap:26px; flex:0 0 auto;">
+      <div class="card blk blk--yellow rv" style="--i:3; padding:26px 30px;">
+        <span class="k">01</span>
+        <h3>Multi-document workspaces</h3>
+        <p style="font-size:21px; color:rgba(0,0,0,.84);">Keep several documents active at once and ask questions
+        that span them &mdash; comparing two years of a report, or a policy against its amendment.</p>
+      </div>
+      <div class="card blk rv" style="--i:4; padding:26px 30px;">
+        <span class="k">02</span>
+        <h3>Table- and layout-aware retrieval</h3>
+        <p style="font-size:21px;">Financial tables, multi-column layouts and charts still get flattened into
+        plain text. We measured the reranker putting a revenue table sixth behind five pages of prose about
+        revenue &mdash; tables need their own handling.</p>
+      </div>
+      <div class="card blk rv" style="--i:5; padding:26px 30px;">
+        <span class="k">03</span>
+        <h3>Structure-aware chunking</h3>
+        <p style="font-size:21px;">Chunks are cut by token count, so a table row and a paragraph are treated
+        identically. Cutting on the document's real structure &mdash; headings, sections, table rows &mdash; is the
+        next thing worth measuring.</p>
+      </div>
+      <div class="card blk blk--blue rv" style="--i:6; padding:26px 30px;">
+        <span class="k">04</span>
+        <h3>Lifecycle and security</h3>
+        <p style="font-size:21px; color:rgba(255,255,255,.9);">Versioning, deletion, incremental re-indexing,
+        authentication, session isolation and audit logging &mdash; everything needed before a real document
+        goes near it.</p>
+      </div>
+    </div>
+  </div>
+  <div class="chrome"><span>Nimbus &middot; Future enhancements</span><span class="pg">10</span></div>
+</section>
+
+<!-- =======================================================
+     SLIDE 11 — CLOSING
+     ======================================================= -->
+<section class="slide slide--ink" data-t="Close">
+  <div class="pad">
+    <div class="close-wrap">
+      <div class="rv" style="--i:0"><span class="eyebrow">From documents to grounded answers</span></div>
+      <h2 class="close-line rv" style="--i:1">An assistant that answers from the document &mdash; not beyond it.</h2>
+
+      <div class="t-meta" style="margin-top:48px;">
+        <b class="rv" style="--i:2; background:#fff; border-color:#fff;">Runtime ingestion</b>
+        <b class="rv on" style="--i:3; border-color:#fff;">Retrieval + reranking</b>
+        <b class="rv" style="--i:4; background:#fff; border-color:#fff;">Grounded generation</b>
+        <b class="rv ev" style="--i:5; border-color:#fff;">Verified citations</b>
+        <b class="rv" style="--i:6; background:#fff; border-color:#fff;">Honest refusal</b>
+      </div>
+
+      <div class="rv" style="--i:7; margin-top:52px; display:flex; align-items:flex-end;
+           justify-content:space-between; gap:40px; border-top:4px solid #fff; padding-top:26px;">
+        <div>
+          <div style="font-family:var(--font-display); font-size:46px; text-transform:uppercase;
+               letter-spacing:-.02em;">Thank you</div>
+          <div style="font-family:var(--font-mono); font-size:19px; letter-spacing:.2em;
+               text-transform:uppercase; color:var(--muted); margin-top:10px;">Questions &amp; discussion</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-family:var(--font-mono); font-size:17px; letter-spacing:.2em;
+               text-transform:uppercase; color:var(--muted);">Use case 03 &middot; Team No. 5</div>
+          <div style="font-family:var(--font-mono); font-size:20px; letter-spacing:.12em;
+               text-transform:uppercase; margin-top:8px;">Sujay &middot; Mahesh &middot; Yamini &middot; Siva Prasad</div>
+        </div>
+      </div>
+    </div>
+    <div class="mq rv" style="--i:8">
+      <span>Nimbus &nbsp;&middot;&nbsp; document intelligence assistant &nbsp;&middot;&nbsp; upload &nbsp;&rarr;&nbsp; parse &nbsp;&rarr;&nbsp; chunk &nbsp;&rarr;&nbsp; embed &nbsp;&rarr;&nbsp; index &nbsp;&rarr;&nbsp; retrieve &nbsp;&rarr;&nbsp; ground &nbsp;&rarr;&nbsp; cite &nbsp;&middot;&nbsp; Nimbus &nbsp;&middot;&nbsp; document intelligence assistant &nbsp;&middot;&nbsp; upload &nbsp;&rarr;&nbsp; parse &nbsp;&rarr;&nbsp; chunk &nbsp;&rarr;&nbsp; embed &nbsp;&rarr;&nbsp; index &nbsp;&rarr;&nbsp; retrieve &nbsp;&rarr;&nbsp; ground &nbsp;&rarr;&nbsp; cite &nbsp;&middot;&nbsp; </span>
+    </div>
+  </div>
+</section>
+
+<!-- Slide-transition wipe, and the progress rail. Both sit
+     above the slides and outside the content design system. -->
+<div class="wipe" id="wipe"><i></i><i></i></div>
+<div class="rail" id="rail" style="width:0"></div>
+
+</main>
+</div>
+
+<div class="edit-hotzone"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">&#9998;</button>
+<div class="edit-hint">Edit mode &middot; click any text &middot; Ctrl+S saves &middot; E exits</div>
+
+<script>
+/* ===========================================================
+   NIMBUS DECK CONTROLLER
+   - fixed 1920x1080 stage, scaled by one transform
+   - keyboard / wheel / swipe navigation
+   - wipe transition + reveal re-trigger on every slide change
+   - count-up animation for [data-count] figures
+   =========================================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.stage = document.getElementById('deckStage');
+        this.wipe = document.getElementById('wipe');
+        this.rail = document.getElementById('rail');
+        this.current = 0;
+        this.locked = false;
+
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupPointerNav();
+        this.showSlide(0, true);
+    }
+
+    /* --- Scale the whole stage; never reflow slide content --- */
+    setupStageScale() {
+        const scale = () => {
+            const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * factor) / 2;
+            const y = (window.innerHeight - 1080 * factor) / 2;
+            this.stage.style.transform =
+                'translate(' + x + 'px, ' + y + 'px) scale(' + factor + ')';
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            if (document.body.classList.contains('editing')) return;
+            switch (e.key) {
+                case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+                    e.preventDefault(); this.next(); break;
+                case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+                    e.preventDefault(); this.prev(); break;
+                case 'Home': e.preventDefault(); this.go(0); break;
+                case 'End':  e.preventDefault(); this.go(this.slides.length - 1); break;
+            }
+        });
+    }
+
+    setupPointerNav() {
+        /* Wheel, throttled so one trackpad flick is one slide. */
+        let wheelLock = 0;
+        window.addEventListener('wheel', (e) => {
+            if (document.body.classList.contains('editing')) return;
+            const now = Date.now();
+            if (now - wheelLock < 700) return;
+            if (Math.abs(e.deltaY) < 18) return;
+            wheelLock = now;
+            if (e.deltaY > 0) this.next(); else this.prev();
+        }, { passive: true });
+
+        /* Swipe. */
+        let startX = 0, startY = 0;
+        window.addEventListener('touchstart', (e) => {
+            startX = e.changedTouches[0].clientX;
+            startY = e.changedTouches[0].clientY;
+        }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            const dx = e.changedTouches[0].clientX - startX;
+            const dy = e.changedTouches[0].clientY - startY;
+            if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy)) return;
+            if (dx < 0) this.next(); else this.prev();
+        }, { passive: true });
+    }
+
+    next() { this.go(this.current + 1); }
+    prev() { this.go(this.current - 1); }
+
+    go(index) {
+        const target = Math.max(0, Math.min(index, this.slides.length - 1));
+        if (target === this.current || this.locked) return;
+        this.locked = true;
+
+        /* Run the wipe, and swap slides while the stage is covered. */
+        this.wipe.classList.remove('run');
+        void this.wipe.offsetWidth;          /* restart the animation  */
+        this.wipe.classList.add('run');
+
+        window.setTimeout(() => this.showSlide(target), 250);
+        window.setTimeout(() => {
+            this.wipe.classList.remove('run');
+            this.locked = false;
+        }, 620);
+    }
+
+    showSlide(index, immediate) {
+        this.current = index;
+        this.slides.forEach((slide, i) => {
+            const on = i === index;
+            slide.classList.toggle('active', on);
+            slide.classList.toggle('visible', on);
+        });
+        this.rail.style.width =
+            (((index + 1) / this.slides.length) * 100) + '%';
+        countUp(this.slides[index]);
+        if (immediate) { /* first paint: reveals run from the .visible class */ }
+    }
+}
+
+/* ===========================================================
+   COUNT-UP
+   Rolls [data-count] figures from zero on slide entry.
+   The real value is always written back at the end, so a
+   screenshot or a PDF export never catches a partial number.
+   =========================================================== */
+function countUp(slide) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    slide.querySelectorAll('[data-count]').forEach((el, n) => {
+        const target = parseFloat(el.dataset.count);
+        const dec = parseInt(el.dataset.dec || '2', 10);
+        if (reduce || !isFinite(target)) { el.textContent = target.toFixed(dec); return; }
+
+        const dur = 620;
+        const delay = 200 + n * 55;
+        let raf = 0;
+        if (el._raf) cancelAnimationFrame(el._raf);
+        el.textContent = (0).toFixed(dec);
+
+        window.setTimeout(() => {
+            const t0 = performance.now();
+            const step = (now) => {
+                const p = Math.min(1, (now - t0) / dur);
+                /* ease-out cubic: fast start, hard settle */
+                const e = 1 - Math.pow(1 - p, 3);
+                el.textContent = (target * e).toFixed(dec);
+                if (p < 1) { raf = requestAnimationFrame(step); el._raf = raf; }
+                else { el.textContent = target.toFixed(dec); el._raf = 0; }
+            };
+            raf = requestAnimationFrame(step);
+            el._raf = raf;
+        }, delay);
+    });
+}
+
+/* ===========================================================
+   INLINE EDITING
+   Hover the top-left corner or press E. Edits persist to
+   localStorage; Ctrl+S downloads the edited file.
+   =========================================================== */
+class InlineEditor {
+    constructor(deck) {
+        this.deck = deck;
+        this.isActive = false;
+        this.key = 'nimbus-deck-edits';
+        this.targets = Array.from(document.querySelectorAll(
+            '.slide h1, .slide h2, .slide h3, .slide h4, .slide p, ' +
+            '.slide td, .slide th, .slide .lbl, .slide .note, .slide .why, ' +
+            '.slide .t-sub, .slide .eyebrow, .slide .k, .slide .nm, .slide .v'
+        ));
+        this.targets.forEach((el, i) => { el.dataset.eid = 'e' + i; });
+        this.restore();
+        this.bind();
+    }
+
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        document.getElementById('editToggle').classList.toggle('active', this.isActive);
+        this.targets.forEach((el) => {
+            if (this.isActive) el.setAttribute('contenteditable', 'true');
+            else el.removeAttribute('contenteditable');
+        });
+        if (!this.isActive) this.save();
+    }
+
+    save() {
+        const out = {};
+        this.targets.forEach((el) => { out[el.dataset.eid] = el.innerHTML; });
+        try { localStorage.setItem(this.key, JSON.stringify(out)); } catch (err) { /* private mode */ }
+    }
+
+    restore() {
+        let data = null;
+        try { data = JSON.parse(localStorage.getItem(this.key) || 'null'); } catch (err) { data = null; }
+        if (!data) return;
+        this.targets.forEach((el) => {
+            if (typeof data[el.dataset.eid] === 'string') el.innerHTML = data[el.dataset.eid];
+        });
+    }
+
+    download() {
+        this.save();
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'nimbus-deck.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    bind() {
+        const toggle = document.getElementById('editToggle');
+        const hotzone = document.querySelector('.edit-hotzone');
+        let hideTimeout = null;
+
+        toggle.addEventListener('click', () => this.toggleEditMode());
+        hotzone.addEventListener('click', () => this.toggleEditMode());
+
+        /* 400ms grace period: without it the button vanishes
+           while the pointer travels from hotzone to button. */
+        hotzone.addEventListener('mouseenter', () => {
+            clearTimeout(hideTimeout); toggle.classList.add('show');
+        });
+        hotzone.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                if (!this.isActive) toggle.classList.remove('show');
+            }, 400);
+        });
+        toggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+        toggle.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                if (!this.isActive) toggle.classList.remove('show');
+            }, 400);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'e' || e.key === 'E') &&
+                !e.target.getAttribute('contenteditable')) {
+                this.toggleEditMode();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault(); this.download();
+            }
+        });
+    }
+}
+
+const deck = new SlidePresentation();
+const editor = new InlineEditor(deck);
+</script>
+</body>
+</html>

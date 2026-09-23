@@ -22,19 +22,34 @@ from app.pipelines.query_pipeline import QueryPipeline
 # Configuration
 # ---------------------------------------------------------
 
-def load_gold_set() -> list[dict]:
-    """Load evaluation questions from the gold set."""
+def load_gold_set(path: Path | None = None) -> list[dict]:
+    """
+    Load evaluation questions from a gold set.
 
-    with open(GOLD_SET_PATH, "r", encoding="utf-8") as file:
+    The gold set is an object whose `cases` key holds the list.
+    """
+
+    with open(
+        path or GOLD_SET_PATH, "r", encoding="utf-8"
+    ) as file:
         data = json.load(file)
 
+    if isinstance(data, dict) and "cases" in data:
+        data = data["cases"]
+
     if not isinstance(data, list):
-        raise ValueError("gold_set.json must contain a JSON list.")
+        raise ValueError(
+            "Gold set must be a JSON list, or an object with a "
+            "'cases' list."
+        )
 
     return data
 
 
-def run_live_evaluation(document_id: str) -> list[dict]:
+def run_live_evaluation(
+    document_id: str,
+    gold_path: Path | None = None,
+) -> list[dict]:
     """
     Run every gold-set question through the real QueryPipeline.
 
@@ -46,7 +61,7 @@ def run_live_evaluation(document_id: str) -> list[dict]:
         - retrieval scores
     """
 
-    gold_set = load_gold_set()
+    gold_set = load_gold_set(gold_path)
 
     pipeline = QueryPipeline()
 
@@ -83,8 +98,8 @@ def run_live_evaluation(document_id: str) -> list[dict]:
                     "question": question,
                     "type": case.get("type"),
                     "expected_pages": case.get(
-                        "expected_pages",
-                        [],
+                        "primary_pages",
+                        case.get("expected_pages", []),
                     ),
                     "answer": response.get("answer", ""),
                     "retrieved_pages": retrieved_pages,
@@ -114,8 +129,8 @@ def run_live_evaluation(document_id: str) -> list[dict]:
                     "question": question,
                     "type": case.get("type"),
                     "expected_pages": case.get(
-                        "expected_pages",
-                        [],
+                        "primary_pages",
+                        case.get("expected_pages", []),
                     ),
                     "answer": "",
                     "retrieved_pages": [],
@@ -153,25 +168,36 @@ def main() -> None:
         python -m evaluation.run_live_evaluation <document_id>
     """
 
-    if len(sys.argv) != 2:
-        print(
-            "Usage:\n"
-            "  python -m evaluation.run_live_evaluation "
-            "<document_id>"
-        )
-        sys.exit(1)
+    import argparse
 
-    document_id = sys.argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("document_id")
+    parser.add_argument(
+        "--gold",
+        default=None,
+        help="Gold set file (v1 list or v2 object schema).",
+    )
+    parser.add_argument(
+        "--out",
+        default=None,
+        help="Where to write live results JSON.",
+    )
+    args = parser.parse_args()
+
+    document_id = args.document_id
+    gold_path = Path(args.gold) if args.gold else None
 
     print("\nDocument Intelligence Assistant")
     print("Phase 3 - Live Evaluation")
     print("=" * 70)
     print(f"Document ID: {document_id}")
 
-    results = run_live_evaluation(document_id)
+    results = run_live_evaluation(document_id, gold_path)
 
     output_path = (
-        Path(__file__).resolve().parent
+        Path(args.out)
+        if args.out
+        else Path(__file__).resolve().parent
         / "live_results.json"
     )
 

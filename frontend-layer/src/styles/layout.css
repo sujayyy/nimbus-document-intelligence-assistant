@@ -1,0 +1,323 @@
+/* =====================================================
+   SHELL
+
+   Three columns: documents, conversation, evidence.
+   The centre column is a raised "sheet" - the product's
+   core metaphor is paper, so the conversation literally
+   sits on a page above the desk.
+===================================================== */
+
+.shell {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail-w) minmax(0, 1fr) var(--evidence-w);
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  grid-template-areas:
+    "topbar topbar  topbar"
+    "rail   stage   evidence";
+  height: 100%;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* -----------------------------------------------------
+   DESK TEXTURE
+
+   A faint warm grid plus one soft accent bloom. Fixed,
+   non-interactive, and behind everything.
+----------------------------------------------------- */
+
+.desk {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.09) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image: radial-gradient(
+    ellipse 90% 70% at 50% 40%,
+    #000 20%,
+    transparent 78%
+  );
+}
+
+.desk-bloom {
+  position: absolute;
+  top: -12%;
+  left: 52%;
+  width: min(760px, 70vw);
+  aspect-ratio: 1;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    var(--steel-wash) 0%,
+    transparent 62%
+  );
+  transform: translateX(-50%);
+}
+
+/* =====================================================
+   TOPBAR
+===================================================== */
+
+.topbar {
+  grid-area: topbar;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: 0 var(--s-4);
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.1);
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+/* =====================================================
+   RAIL  (left - documents)
+===================================================== */
+
+.rail {
+  grid-area: rail;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+}
+
+.rail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-4) var(--s-2);
+}
+
+.rail-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-2) var(--s-3) var(--s-4);
+}
+
+.rail-foot {
+  padding: var(--s-3) var(--s-4);
+  padding-bottom: calc(var(--s-3) + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--line);
+}
+
+/* =====================================================
+   STAGE  (centre - conversation)
+===================================================== */
+
+.stage {
+  grid-area: stage;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.stage-scroll {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.stage-inner {
+  width: 100%;
+  max-width: var(--reading-w);
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-5) var(--s-5);
+}
+
+/* =====================================================
+   EVIDENCE  (right - sources)
+===================================================== */
+
+.evidence {
+  grid-area: evidence;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-left: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+}
+
+.evidence-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-4) var(--s-2);
+}
+
+.evidence-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-2) var(--s-3) var(--s-5);
+}
+
+/* =====================================================
+   DRAWER SCRIM  (tablet / mobile)
+===================================================== */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  background: rgba(36, 30, 26, 0.32);
+  backdrop-filter: blur(2px);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* =====================================================
+   RESPONSIVE
+
+   1160px : evidence panel becomes a drawer
+    880px : document rail becomes a drawer too, chat wins
+----------------------------------------------------- */
+
+@media (max-width: 1160px) {
+  .shell {
+    grid-template-columns: var(--rail-w) minmax(0, 1fr);
+    grid-template-areas:
+      "topbar topbar"
+      "rail   stage";
+  }
+
+  .evidence {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    width: min(360px, 88vw);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--surface);
+    box-shadow: var(--sh-4);
+  }
+}
+
+@media (max-width: 880px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "topbar"
+      "stage";
+  }
+
+  .rail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 9;
+    width: min(300px, 86vw);
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--surface);
+    box-shadow: var(--sh-4);
+  }
+
+  .stage-inner {
+    padding: var(--s-5) var(--s-4) var(--s-4);
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --t-3xl: 2rem;
+    --t-2xl: 1.5rem;
+  }
+
+  .stage-inner {
+    padding: var(--s-4) var(--s-4) var(--s-3);
+  }
+}
+
+/* =====================================================
+   DRAWER VISIBILITY
+
+   Above 1160px both side panels are permanent columns
+   and the toggles are hidden. Below it they become
+   drawers that slide in over the stage.
+===================================================== */
+
+/* Raised above .btn-icon's own display so the toggles
+   genuinely disappear on wide screens - equal specificity
+   would let whichever file loads last win. */
+.btn-icon.only-narrow,
+.only-narrow {
+  display: none;
+}
+
+@media (max-width: 1160px) {
+  .evidence {
+    transform: translateX(100%);
+    transition: transform var(--d-mid) var(--ease-out);
+    visibility: hidden;
+  }
+
+  .evidence.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .topbar-right .btn-icon.only-narrow,
+  .evidence-head .btn-icon.only-narrow {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 880px) {
+  .rail {
+    transform: translateX(-100%);
+    transition: transform var(--d-mid) var(--ease-out);
+    visibility: hidden;
+  }
+
+  .rail.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .topbar-left .btn-icon.only-narrow {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rail,
+  .evidence {
+    transition: none;
+  }
+}

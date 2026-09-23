@@ -1,0 +1,5299 @@
+{
+  "dense": {
+    "label": "A. Dense only",
+    "notes": "FAISS top-5 directly. No reranking.",
+    "config": {
+      "use_reranker": false,
+      "use_rrf": false,
+      "use_financial": false,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.8333333333333334,
+      "recall": 0.7314814814814814,
+      "precision": 0.19166666666666668,
+      "adjusted_precision": 0.33888888888888885,
+      "exact": 0.0,
+      "mrr": 0.5824074074074075,
+      "ndcg": 0.6370837508348488,
+      "ndcg_graded": 0.7275791597346711
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8597186998521972,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          9,
+          27,
+          36,
+          39,
+          71
+        ],
+        "ranked_pages": [
+          71,
+          36,
+          39,
+          27,
+          9
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6199062332840657,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          36,
+          39,
+          41,
+          61,
+          71
+        ],
+        "ranked_pages": [
+          61,
+          71,
+          36,
+          39,
+          41
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          9,
+          28,
+          36,
+          37,
+          39
+        ],
+        "ranked_pages": [
+          36,
+          39,
+          37,
+          28,
+          9
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          9,
+          28,
+          36,
+          37,
+          39
+        ],
+        "ranked_pages": [
+          36,
+          39,
+          37,
+          9,
+          28
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.0,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          8,
+          9,
+          37,
+          40,
+          66
+        ],
+        "ranked_pages": [
+          9,
+          66,
+          40,
+          37,
+          8
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.0,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          8,
+          9,
+          31,
+          39,
+          58
+        ],
+        "ranked_pages": [
+          8,
+          58,
+          31,
+          39,
+          9
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8503449055347546,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          7,
+          8,
+          30,
+          39
+        ],
+        "ranked_pages": [
+          39,
+          30,
+          8,
+          7,
+          39
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          22,
+          27,
+          30,
+          36,
+          44
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          36,
+          22,
+          30
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.2,
+        "ndcg": 0.38685280723454163,
+        "ndcg_graded": 0.4841275646907874,
+        "first_relevant_rank": 5,
+        "retrieved_pages": [
+          12,
+          17,
+          18,
+          21,
+          44
+        ],
+        "ranked_pages": [
+          12,
+          18,
+          44,
+          21,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          12,
+          41,
+          47,
+          73
+        ],
+        "ranked_pages": [
+          12,
+          47,
+          41,
+          73,
+          73
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          5,
+          16,
+          69,
+          71,
+          78
+        ],
+        "ranked_pages": [
+          16,
+          5,
+          78,
+          69,
+          71
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.2,
+        "ndcg": 0.38685280723454163,
+        "ndcg_graded": 0.5338931479009518,
+        "first_relevant_rank": 5,
+        "retrieved_pages": [
+          10,
+          13,
+          21,
+          42,
+          56
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          42,
+          56,
+          13
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          35,
+          39,
+          52,
+          77
+        ],
+        "ranked_pages": [
+          35,
+          10,
+          52,
+          77,
+          39
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6509209298071326,
+        "ndcg_graded": 0.6973180732318199,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          3,
+          4,
+          6,
+          10,
+          21
+        ],
+        "ranked_pages": [
+          6,
+          4,
+          10,
+          3,
+          21
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.7002827395649097,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          4,
+          6,
+          11,
+          14,
+          79
+        ],
+        "ranked_pages": [
+          6,
+          11,
+          14,
+          4,
+          79
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.6666666666666666,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9699225363013644,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          13,
+          22,
+          30,
+          32,
+          69
+        ],
+        "ranked_pages": [
+          13,
+          69,
+          32,
+          30,
+          22
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.43067655807339306,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          9,
+          22,
+          36,
+          39,
+          73
+        ],
+        "ranked_pages": [
+          9,
+          73,
+          39,
+          36,
+          22
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          12,
+          17,
+          21,
+          22,
+          25
+        ],
+        "ranked_pages": [
+          17,
+          12,
+          22,
+          21,
+          25
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "ce": {
+    "label": "B. Dense -> CrossEncoder",
+    "notes": "50 candidates reranked by CE, top-5.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": false,
+      "use_financial": false,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.7777777777777778,
+      "recall": 0.6851851851851852,
+      "precision": 0.1777777777777778,
+      "adjusted_precision": 0.39722222222222225,
+      "exact": 0.0,
+      "mrr": 0.5925925925925927,
+      "ndcg": 0.6301459875140555,
+      "ndcg_graded": 0.8302609670686143
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.5672074169568709,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          21,
+          28,
+          30,
+          36,
+          71
+        ],
+        "ranked_pages": [
+          30,
+          71,
+          28,
+          36,
+          21
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.38685280723454163,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          21,
+          22,
+          25,
+          27,
+          61
+        ],
+        "ranked_pages": [
+          61,
+          21,
+          27,
+          22,
+          25
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          39,
+          60,
+          71
+        ],
+        "ranked_pages": [
+          71,
+          28,
+          39,
+          60,
+          28
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.43067655807339306,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          30,
+          39,
+          60
+        ],
+        "ranked_pages": [
+          28,
+          28,
+          60,
+          39,
+          30
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8597186998521972,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          48,
+          36,
+          8,
+          40,
+          66
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          44,
+          51,
+          54,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          51,
+          44,
+          58,
+          54
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          39,
+          40,
+          51,
+          63
+        ],
+        "ranked_pages": [
+          38,
+          39,
+          51,
+          40,
+          63
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          28,
+          31,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          28,
+          61,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8503449055347546,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          12,
+          17,
+          20,
+          74
+        ],
+        "ranked_pages": [
+          17,
+          12,
+          20,
+          74,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          11,
+          12,
+          22,
+          69,
+          70
+        ],
+        "ranked_pages": [
+          11,
+          12,
+          69,
+          22,
+          70
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          4,
+          16,
+          69
+        ],
+        "ranked_pages": [
+          16,
+          4,
+          69,
+          2,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.7074887171046738,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          10,
+          13,
+          20,
+          22,
+          33
+        ],
+        "ranked_pages": [
+          22,
+          20,
+          33,
+          13,
+          10
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          35,
+          53,
+          73
+        ],
+        "ranked_pages": [
+          35,
+          29,
+          10,
+          53,
+          73
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8529278650606567,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          6,
+          10,
+          11,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          6,
+          11,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.762346330035624,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          4,
+          6,
+          10,
+          11,
+          14
+        ],
+        "ranked_pages": [
+          14,
+          6,
+          11,
+          10,
+          4
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.3333333333333333,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.5271341073823443,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          13,
+          21,
+          22,
+          42,
+          43
+        ],
+        "ranked_pages": [
+          43,
+          42,
+          13,
+          21,
+          22
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          25,
+          28,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          25,
+          28,
+          28,
+          30
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          17,
+          21,
+          31
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          10,
+          31,
+          10
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "rrf": {
+    "label": "C. Dense + CE -> RRF",
+    "notes": "RRF fusion 0.70/0.30, no financial, no page-aware.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": true,
+      "use_financial": false,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.9444444444444444,
+      "recall": 0.8703703703703703,
+      "precision": 0.23333333333333334,
+      "adjusted_precision": 0.425,
+      "exact": 0.0,
+      "mrr": 0.5805555555555555,
+      "ndcg": 0.6815982910572619,
+      "ndcg_graded": 0.7746807092762018
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8599797111848092,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          27,
+          36,
+          39,
+          71,
+          72
+        ],
+        "ranked_pages": [
+          71,
+          36,
+          27,
+          72,
+          39
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.2,
+        "ndcg": 0.38685280723454163,
+        "ndcg_graded": 0.5338931479009518,
+        "first_relevant_rank": 5,
+        "retrieved_pages": [
+          28,
+          36,
+          41,
+          61,
+          71
+        ],
+        "ranked_pages": [
+          61,
+          71,
+          41,
+          28,
+          36
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.6433224083306327,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          22,
+          28,
+          36,
+          39,
+          71
+        ],
+        "ranked_pages": [
+          39,
+          36,
+          28,
+          71,
+          22
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.7763433706236033,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          28,
+          36,
+          37,
+          39,
+          60
+        ],
+        "ranked_pages": [
+          39,
+          28,
+          36,
+          37,
+          60
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.43067655807339306,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          7,
+          8,
+          36,
+          40,
+          66
+        ],
+        "ranked_pages": [
+          66,
+          40,
+          8,
+          36,
+          7
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.6309297535714575,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          38,
+          39,
+          57,
+          58
+        ],
+        "ranked_pages": [
+          58,
+          38,
+          39,
+          8,
+          57
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.5,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.7328286204777911,
+        "ndcg_graded": 0.7328286204777911,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          30,
+          38,
+          39
+        ],
+        "ranked_pages": [
+          30,
+          39,
+          38,
+          39,
+          8
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          22,
+          27,
+          36,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          36,
+          61,
+          22
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6240505200038379,
+        "ndcg_graded": 0.6240505200038379,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          12,
+          17,
+          18,
+          21
+        ],
+        "ranked_pages": [
+          12,
+          17,
+          18,
+          21,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          12,
+          22,
+          41,
+          47,
+          73
+        ],
+        "ranked_pages": [
+          12,
+          41,
+          73,
+          47,
+          22
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          5,
+          16,
+          69,
+          78
+        ],
+        "ranked_pages": [
+          16,
+          5,
+          69,
+          78,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6444675286963276,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          10,
+          13,
+          21,
+          56
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          13,
+          56,
+          21
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9876955095526512,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          33,
+          35,
+          77
+        ],
+        "ranked_pages": [
+          35,
+          10,
+          29,
+          77,
+          33
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5706417189553201,
+        "ndcg_graded": 0.5976315487360696,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          3,
+          4,
+          6,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          6,
+          21,
+          4,
+          3,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.7002827395649097,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          4,
+          6,
+          11,
+          14,
+          20
+        ],
+        "ranked_pages": [
+          6,
+          11,
+          14,
+          4,
+          20
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.6666666666666666,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9815720279306078,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          13,
+          22,
+          42,
+          43,
+          69
+        ],
+        "ranked_pages": [
+          13,
+          69,
+          42,
+          22,
+          43
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          21,
+          22,
+          30,
+          36,
+          39
+        ],
+        "ranked_pages": [
+          36,
+          21,
+          30,
+          39,
+          22
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          3,
+          12,
+          17,
+          21,
+          22
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          22,
+          12,
+          3
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "ce_fin": {
+    "label": "D. CE + financial",
+    "notes": "Isolates financial heuristic on top of CE.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": false,
+      "use_financial": true,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.7777777777777778,
+      "recall": 0.6851851851851852,
+      "precision": 0.1777777777777778,
+      "adjusted_precision": 0.39722222222222225,
+      "exact": 0.0,
+      "mrr": 0.5925925925925927,
+      "ndcg": 0.6301459875140555,
+      "ndcg_graded": 0.8302609670686143
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.5672074169568709,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          21,
+          28,
+          30,
+          36,
+          71
+        ],
+        "ranked_pages": [
+          30,
+          71,
+          28,
+          36,
+          21
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.38685280723454163,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          21,
+          22,
+          25,
+          27,
+          61
+        ],
+        "ranked_pages": [
+          61,
+          21,
+          27,
+          22,
+          25
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          39,
+          60,
+          71
+        ],
+        "ranked_pages": [
+          71,
+          28,
+          39,
+          60,
+          28
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.43067655807339306,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          30,
+          39,
+          60
+        ],
+        "ranked_pages": [
+          28,
+          28,
+          60,
+          39,
+          30
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8597186998521972,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          48,
+          36,
+          8,
+          40,
+          66
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          44,
+          51,
+          54,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          51,
+          44,
+          58,
+          54
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          39,
+          40,
+          51,
+          63
+        ],
+        "ranked_pages": [
+          38,
+          39,
+          51,
+          40,
+          63
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          28,
+          31,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          28,
+          61,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8503449055347546,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          12,
+          17,
+          20,
+          74
+        ],
+        "ranked_pages": [
+          17,
+          12,
+          20,
+          74,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          11,
+          12,
+          22,
+          69,
+          70
+        ],
+        "ranked_pages": [
+          11,
+          12,
+          69,
+          22,
+          70
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          4,
+          16,
+          69
+        ],
+        "ranked_pages": [
+          16,
+          4,
+          69,
+          2,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.7074887171046738,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          10,
+          13,
+          20,
+          22,
+          33
+        ],
+        "ranked_pages": [
+          22,
+          20,
+          33,
+          13,
+          10
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          35,
+          53,
+          73
+        ],
+        "ranked_pages": [
+          35,
+          29,
+          10,
+          53,
+          73
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8529278650606567,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          6,
+          10,
+          11,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          6,
+          11,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.762346330035624,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          4,
+          6,
+          10,
+          11,
+          14
+        ],
+        "ranked_pages": [
+          14,
+          6,
+          11,
+          10,
+          4
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.3333333333333333,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.5271341073823443,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          13,
+          21,
+          22,
+          42,
+          43
+        ],
+        "ranked_pages": [
+          43,
+          42,
+          13,
+          21,
+          22
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          25,
+          28,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          25,
+          28,
+          28,
+          30
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          17,
+          21,
+          31
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          10,
+          31,
+          10
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "rrf_fin": {
+    "label": "E. RRF + financial",
+    "notes": "Production minus page-aware selection.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": true,
+      "use_financial": true,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.9444444444444444,
+      "recall": 0.8703703703703703,
+      "precision": 0.2277777777777778,
+      "adjusted_precision": 0.4861111111111111,
+      "exact": 0.0,
+      "mrr": 0.7222222222222222,
+      "ndcg": 0.7758164897228655,
+      "ndcg_graded": 0.864005141936176
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8840708486175419,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          25,
+          27,
+          36,
+          71,
+          72
+        ],
+        "ranked_pages": [
+          71,
+          36,
+          25,
+          27,
+          72
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6199062332840657,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          27,
+          36,
+          39,
+          61,
+          71
+        ],
+        "ranked_pages": [
+          61,
+          71,
+          36,
+          27,
+          39
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9778585125241057,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          25,
+          36,
+          39,
+          69,
+          71
+        ],
+        "ranked_pages": [
+          36,
+          71,
+          69,
+          25,
+          39
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 1.0,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.9065280314885752,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          36,
+          37,
+          39,
+          40,
+          48
+        ],
+        "ranked_pages": [
+          39,
+          36,
+          37,
+          40,
+          48
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          36,
+          48,
+          66,
+          40,
+          8
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          38,
+          39,
+          57,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          58,
+          39,
+          8,
+          57
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8772153153380493,
+        "ndcg_graded": 0.8772153153380493,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          30,
+          38,
+          39,
+          56
+        ],
+        "ranked_pages": [
+          38,
+          56,
+          30,
+          39,
+          8
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          31,
+          36,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          36,
+          61,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6240505200038379,
+        "ndcg_graded": 0.6240505200038379,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          12,
+          17,
+          18,
+          21
+        ],
+        "ranked_pages": [
+          12,
+          17,
+          18,
+          21,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          12,
+          22,
+          41,
+          47,
+          73
+        ],
+        "ranked_pages": [
+          12,
+          41,
+          73,
+          47,
+          22
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          5,
+          16,
+          69,
+          78
+        ],
+        "ranked_pages": [
+          16,
+          5,
+          69,
+          78,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6444675286963276,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          10,
+          13,
+          21,
+          56
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          13,
+          56,
+          21
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9876955095526512,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          33,
+          35,
+          77
+        ],
+        "ranked_pages": [
+          35,
+          10,
+          29,
+          77,
+          33
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5706417189553201,
+        "ndcg_graded": 0.5976315487360696,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          3,
+          4,
+          6,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          6,
+          21,
+          4,
+          3,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.7002827395649097,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          4,
+          6,
+          11,
+          14,
+          20
+        ],
+        "ranked_pages": [
+          6,
+          11,
+          14,
+          4,
+          20
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.6666666666666666,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9815720279306078,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          13,
+          22,
+          42,
+          43,
+          69
+        ],
+        "ranked_pages": [
+          13,
+          69,
+          42,
+          22,
+          43
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          21,
+          23,
+          25,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          23,
+          25,
+          21,
+          30
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          3,
+          12,
+          17,
+          21,
+          22
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          22,
+          12,
+          3
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "rrf_fin_page": {
+    "label": "F. RRF + financial + page-aware (PRODUCTION)",
+    "notes": "Exact current production architecture.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": true,
+      "use_financial": true,
+      "use_page_aware": true,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.9444444444444444,
+      "recall": 0.8703703703703703,
+      "precision": 0.2277777777777778,
+      "adjusted_precision": 0.4861111111111111,
+      "exact": 0.0,
+      "mrr": 0.7222222222222222,
+      "ndcg": 0.7758164897228655,
+      "ndcg_graded": 0.864005141936176
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8840708486175419,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          25,
+          27,
+          36,
+          71,
+          72
+        ],
+        "ranked_pages": [
+          71,
+          36,
+          25,
+          27,
+          72
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6199062332840657,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          27,
+          36,
+          39,
+          61,
+          71
+        ],
+        "ranked_pages": [
+          61,
+          71,
+          36,
+          27,
+          39
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9778585125241057,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          25,
+          36,
+          39,
+          69,
+          71
+        ],
+        "ranked_pages": [
+          36,
+          71,
+          69,
+          25,
+          39
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 1.0,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.9065280314885752,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          36,
+          37,
+          39,
+          40,
+          48
+        ],
+        "ranked_pages": [
+          39,
+          36,
+          37,
+          40,
+          48
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          36,
+          48,
+          66,
+          40,
+          8
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          38,
+          39,
+          57,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          58,
+          39,
+          8,
+          57
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8772153153380493,
+        "ndcg_graded": 0.8772153153380493,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          8,
+          30,
+          38,
+          39,
+          56
+        ],
+        "ranked_pages": [
+          38,
+          56,
+          30,
+          39,
+          8
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          31,
+          36,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          36,
+          61,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6240505200038379,
+        "ndcg_graded": 0.6240505200038379,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          12,
+          17,
+          18,
+          21
+        ],
+        "ranked_pages": [
+          12,
+          17,
+          18,
+          21,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          12,
+          22,
+          41,
+          47,
+          73
+        ],
+        "ranked_pages": [
+          12,
+          41,
+          73,
+          47,
+          22
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          5,
+          16,
+          69,
+          78
+        ],
+        "ranked_pages": [
+          16,
+          5,
+          69,
+          78,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.6444675286963276,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          10,
+          13,
+          21,
+          56
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          13,
+          56,
+          21
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9876955095526512,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          33,
+          35,
+          77
+        ],
+        "ranked_pages": [
+          35,
+          10,
+          29,
+          77,
+          33
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5706417189553201,
+        "ndcg_graded": 0.5976315487360696,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          3,
+          4,
+          6,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          6,
+          21,
+          4,
+          3,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.7002827395649097,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          4,
+          6,
+          11,
+          14,
+          20
+        ],
+        "ranked_pages": [
+          6,
+          11,
+          14,
+          4,
+          20
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.6666666666666666,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9815720279306078,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          13,
+          22,
+          42,
+          43,
+          69
+        ],
+        "ranked_pages": [
+          13,
+          69,
+          42,
+          22,
+          43
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 0.9502344167898356,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          21,
+          23,
+          25,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          23,
+          25,
+          21,
+          30
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          3,
+          12,
+          17,
+          21,
+          22
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          22,
+          12,
+          3
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "ce_page": {
+    "label": "G. CE + page-aware",
+    "notes": "CE reranking with page diversity, no RRF/financial.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": false,
+      "use_financial": false,
+      "use_page_aware": true,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.7,
+      "rrf_reranker_weight": 0.3
+    },
+    "summary": {
+      "hit_rate": 0.7777777777777778,
+      "recall": 0.6851851851851852,
+      "precision": 0.1777777777777778,
+      "adjusted_precision": 0.39722222222222225,
+      "exact": 0.0,
+      "mrr": 0.5925925925925927,
+      "ndcg": 0.6301459875140555,
+      "ndcg_graded": 0.8302609670686143
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.5672074169568709,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          21,
+          28,
+          30,
+          36,
+          71
+        ],
+        "ranked_pages": [
+          30,
+          71,
+          28,
+          36,
+          21
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.38685280723454163,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          21,
+          22,
+          25,
+          27,
+          61
+        ],
+        "ranked_pages": [
+          61,
+          21,
+          27,
+          22,
+          25
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          39,
+          60,
+          71
+        ],
+        "ranked_pages": [
+          71,
+          28,
+          39,
+          60,
+          28
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.43067655807339306,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          30,
+          39,
+          60
+        ],
+        "ranked_pages": [
+          28,
+          28,
+          60,
+          39,
+          30
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.8597186998521972,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          48,
+          36,
+          8,
+          40,
+          66
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          44,
+          51,
+          54,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          51,
+          44,
+          58,
+          54
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          39,
+          40,
+          51,
+          63
+        ],
+        "ranked_pages": [
+          38,
+          39,
+          51,
+          40,
+          63
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          28,
+          31,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          28,
+          61,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8503449055347546,
+        "ndcg_graded": 0.8503449055347546,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          12,
+          17,
+          20,
+          74
+        ],
+        "ranked_pages": [
+          17,
+          12,
+          20,
+          74,
+          17
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          11,
+          12,
+          22,
+          69,
+          70
+        ],
+        "ranked_pages": [
+          11,
+          12,
+          69,
+          22,
+          70
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          4,
+          16,
+          69
+        ],
+        "ranked_pages": [
+          16,
+          4,
+          69,
+          2,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.7074887171046738,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          10,
+          13,
+          20,
+          22,
+          33
+        ],
+        "ranked_pages": [
+          22,
+          20,
+          33,
+          13,
+          10
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.8,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          35,
+          53,
+          73
+        ],
+        "ranked_pages": [
+          35,
+          29,
+          10,
+          53,
+          73
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.8529278650606567,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          6,
+          10,
+          11,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          10,
+          21,
+          6,
+          11,
+          14
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.762346330035624,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          4,
+          6,
+          10,
+          11,
+          14
+        ],
+        "ranked_pages": [
+          14,
+          6,
+          11,
+          10,
+          4
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.3333333333333333,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.5271341073823443,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          13,
+          21,
+          22,
+          42,
+          43
+        ],
+        "ranked_pages": [
+          43,
+          42,
+          13,
+          21,
+          22
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          25,
+          28,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          25,
+          28,
+          28,
+          30
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          17,
+          21,
+          31
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          10,
+          31,
+          10
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  },
+  "rrf_ce_heavy": {
+    "label": "H. RRF weighted toward CE (0.30/0.70)",
+    "notes": "Tests whether RRF weighting direction matters.",
+    "config": {
+      "use_reranker": true,
+      "use_rrf": true,
+      "use_financial": false,
+      "use_page_aware": false,
+      "candidate_k": 50,
+      "top_k": 5,
+      "rrf_dense_weight": 0.3,
+      "rrf_reranker_weight": 0.7
+    },
+    "summary": {
+      "hit_rate": 0.7777777777777778,
+      "recall": 0.7037037037037037,
+      "precision": 0.18611111111111114,
+      "adjusted_precision": 0.43611111111111106,
+      "exact": 0.0,
+      "mrr": 0.5879629629629629,
+      "ndcg": 0.6315131737744328,
+      "ndcg_graded": 0.8189973858775522
+    },
+    "cases": [
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.84598267059683,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          28,
+          30,
+          36,
+          71,
+          72
+        ],
+        "ranked_pages": [
+          71,
+          36,
+          30,
+          28,
+          72
+        ],
+        "id": 1,
+        "question": "What was the company's total revenue in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.38685280723454163,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          22,
+          27,
+          28,
+          61,
+          71
+        ],
+        "ranked_pages": [
+          61,
+          27,
+          28,
+          22,
+          71
+        ],
+        "id": 2,
+        "question": "How did revenue change compared with the previous fiscal year?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.25,
+        "ndcg": 0.43067655807339306,
+        "ndcg_graded": 0.7074887171046738,
+        "first_relevant_rank": 4,
+        "retrieved_pages": [
+          22,
+          28,
+          36,
+          39,
+          71
+        ],
+        "ranked_pages": [
+          71,
+          28,
+          39,
+          36,
+          22
+        ],
+        "id": 3,
+        "question": "What was the company's operating income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          71
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.5,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.6240505200038379,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          28,
+          37,
+          39,
+          60
+        ],
+        "ranked_pages": [
+          28,
+          39,
+          60,
+          28,
+          37
+        ],
+        "id": 4,
+        "question": "What was the company's net income in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          37,
+          39,
+          40,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.626665273802673,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          8,
+          36,
+          40,
+          48,
+          66
+        ],
+        "ranked_pages": [
+          8,
+          36,
+          40,
+          66,
+          48
+        ],
+        "id": 5,
+        "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          48
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          38,
+          39,
+          44,
+          51,
+          58
+        ],
+        "ranked_pages": [
+          38,
+          58,
+          44,
+          39,
+          51
+        ],
+        "id": 6,
+        "question": "What were the company's total assets as of June 30, 2025?",
+        "expected_pages": [
+          38
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.4,
+        "adjusted_precision": 0.4,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          30,
+          38,
+          39,
+          40,
+          51
+        ],
+        "ranked_pages": [
+          39,
+          38,
+          51,
+          30,
+          40
+        ],
+        "id": 7,
+        "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+        "expected_pages": [
+          38,
+          39
+        ],
+        "acceptable_pages": [
+          50
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          27,
+          28,
+          31,
+          44,
+          61
+        ],
+        "ranked_pages": [
+          27,
+          44,
+          61,
+          28,
+          31
+        ],
+        "id": 8,
+        "question": "What were research and development expenses in fiscal year 2025?",
+        "expected_pages": [
+          27
+        ],
+        "acceptable_pages": [
+          36,
+          24
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6934264036172708,
+        "ndcg_graded": 0.6934264036172708,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          12,
+          17,
+          20,
+          21
+        ],
+        "ranked_pages": [
+          12,
+          17,
+          17,
+          20,
+          21
+        ],
+        "id": 9,
+        "question": "How does the document describe the company's approach to developing new products and services?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          27,
+          44
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.9469024295259745,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          12,
+          22,
+          41,
+          69,
+          73
+        ],
+        "ranked_pages": [
+          12,
+          22,
+          41,
+          73,
+          69
+        ],
+        "id": 10,
+        "question": "What business segments does the company report?",
+        "expected_pages": [
+          11
+        ],
+        "acceptable_pages": [
+          12,
+          22,
+          24,
+          25,
+          62,
+          69,
+          71
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          2,
+          5,
+          16,
+          69
+        ],
+        "ranked_pages": [
+          16,
+          69,
+          5,
+          2,
+          2
+        ],
+        "id": 11,
+        "question": "How many people does the company employ?",
+        "expected_pages": [
+          16
+        ],
+        "acceptable_pages": []
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.5,
+        "ndcg": 0.6309297535714575,
+        "ndcg_graded": 0.6641442115010364,
+        "first_relevant_rank": 2,
+        "retrieved_pages": [
+          10,
+          13,
+          16,
+          20,
+          21
+        ],
+        "ranked_pages": [
+          10,
+          13,
+          20,
+          21,
+          16
+        ],
+        "id": 12,
+        "question": "What does the document say about competition?",
+        "expected_pages": [
+          13,
+          14
+        ],
+        "acceptable_pages": [
+          16,
+          22,
+          21
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 1.0,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          10,
+          29,
+          33,
+          35,
+          53
+        ],
+        "ranked_pages": [
+          35,
+          10,
+          29,
+          33,
+          53
+        ],
+        "id": 13,
+        "question": "What market risks does the document disclose?",
+        "expected_pages": [
+          35
+        ],
+        "acceptable_pages": [
+          29,
+          53,
+          10,
+          33
+        ]
+      },
+      {
+        "hit": false,
+        "recall": 0.0,
+        "precision": 0.0,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.0,
+        "ndcg": 0.0,
+        "ndcg_graded": 0.6182885020492784,
+        "first_relevant_rank": null,
+        "retrieved_pages": [
+          6,
+          10,
+          11,
+          14,
+          21
+        ],
+        "ranked_pages": [
+          6,
+          21,
+          10,
+          14,
+          11
+        ],
+        "id": 14,
+        "question": "What does the document say about artificial intelligence?",
+        "expected_pages": [
+          3,
+          4
+        ],
+        "acceptable_pages": [
+          2,
+          5,
+          10,
+          11,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.5,
+        "precision": 0.2,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 0.3333333333333333,
+        "ndcg": 0.5,
+        "ndcg_graded": 0.7763433706236033,
+        "first_relevant_rank": 3,
+        "retrieved_pages": [
+          4,
+          6,
+          10,
+          11,
+          14
+        ],
+        "ranked_pages": [
+          14,
+          6,
+          11,
+          4,
+          10
+        ],
+        "id": 15,
+        "question": "What does the document say about security and cybersecurity?",
+        "expected_pages": [
+          2,
+          11
+        ],
+        "acceptable_pages": [
+          4,
+          12,
+          13,
+          14
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 0.6666666666666666,
+        "precision": 0.4,
+        "adjusted_precision": 0.6,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 0.8503449055347546,
+        "ndcg_graded": 0.8518080397362219,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          13,
+          22,
+          42,
+          43,
+          69
+        ],
+        "ranked_pages": [
+          13,
+          43,
+          42,
+          22,
+          69
+        ],
+        "id": 16,
+        "question": "What does the document say about cloud services?",
+        "expected_pages": [
+          13,
+          23,
+          69
+        ],
+        "acceptable_pages": [
+          11,
+          22,
+          24,
+          26,
+          72
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.25,
+        "adjusted_precision": 0.25,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          21,
+          28,
+          30,
+          36
+        ],
+        "ranked_pages": [
+          36,
+          28,
+          30,
+          21,
+          28
+        ],
+        "id": 17,
+        "question": "What was the company's gross margin in fiscal year 2025?",
+        "expected_pages": [
+          36
+        ],
+        "acceptable_pages": [
+          24,
+          25,
+          26
+        ]
+      },
+      {
+        "hit": true,
+        "recall": 1.0,
+        "precision": 0.2,
+        "adjusted_precision": 0.2,
+        "exact": false,
+        "mrr": 1.0,
+        "ndcg": 1.0,
+        "ndcg_graded": 1.0,
+        "first_relevant_rank": 1,
+        "retrieved_pages": [
+          3,
+          17,
+          21,
+          22,
+          31
+        ],
+        "ranked_pages": [
+          17,
+          21,
+          22,
+          3,
+          31
+        ],
+        "id": 18,
+        "question": "What does the document say about datacenters and operations?",
+        "expected_pages": [
+          17
+        ],
+        "acceptable_pages": [
+          11,
+          16,
+          30
+        ]
+      }
+    ]
+  }
+}

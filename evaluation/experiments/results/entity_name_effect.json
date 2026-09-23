@@ -1,0 +1,905 @@
+{
+  "entity": "Microsoft",
+  "architectures": {
+    "dense": {
+      "label": "Dense only",
+      "neutral": 0.6111111111111112,
+      "entity": 0.0,
+      "degraded": 6,
+      "improved": 0,
+      "n": 9,
+      "rows": [
+        {
+          "id": 1,
+          "neutral_question": "What was the company's total revenue in fiscal year 2025?",
+          "entity_question": "What was Microsoft's total revenue in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            9,
+            27,
+            36,
+            39,
+            71
+          ],
+          "entity_pages": [
+            9,
+            23,
+            25,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 3,
+          "neutral_question": "What was the company's operating income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's operating income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            9,
+            28,
+            36,
+            37,
+            39
+          ],
+          "entity_pages": [
+            9,
+            21,
+            22,
+            28,
+            72
+          ]
+        },
+        {
+          "id": 4,
+          "neutral_question": "What was the company's net income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's net income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            9,
+            28,
+            36,
+            37,
+            39
+          ],
+          "entity_pages": [
+            9,
+            23,
+            28,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 5,
+          "neutral_question": "What was the company's diluted earnings per share in fiscal year 2025?",
+          "entity_question": "What was Microsoft's diluted earnings per share in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            8,
+            9,
+            37,
+            40,
+            66
+          ],
+          "entity_pages": [
+            9,
+            21,
+            67,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 6,
+          "neutral_question": "What were the company's total assets as of June 30, 2025?",
+          "entity_question": "What were Microsoft's total assets as of June 30, 2025?",
+          "primary": [
+            38
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            8,
+            9,
+            31,
+            39,
+            58
+          ],
+          "entity_pages": [
+            2,
+            9,
+            21,
+            23,
+            72
+          ]
+        },
+        {
+          "id": 7,
+          "neutral_question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+          "entity_question": "How much cash and cash equivalents did Microsoft hold at June 30, 2025?",
+          "primary": [
+            38,
+            39
+          ],
+          "neutral_recall": 0.5,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            7,
+            8,
+            30,
+            39
+          ],
+          "entity_pages": [
+            9,
+            21,
+            41,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 10,
+          "neutral_question": "What business segments does the company report?",
+          "entity_question": "What business segments does Microsoft report?",
+          "primary": [
+            11
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            12,
+            41,
+            47,
+            73
+          ],
+          "entity_pages": [
+            12,
+            21,
+            22,
+            23,
+            41
+          ]
+        },
+        {
+          "id": 11,
+          "neutral_question": "How many people does the company employ?",
+          "entity_question": "How many people does Microsoft employ?",
+          "primary": [
+            16
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            5,
+            16,
+            69,
+            71,
+            78
+          ],
+          "entity_pages": [
+            2,
+            5,
+            15,
+            24,
+            25
+          ]
+        },
+        {
+          "id": 17,
+          "neutral_question": "What was the company's gross margin in fiscal year 2025?",
+          "entity_question": "What was Microsoft's gross margin in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            9,
+            22,
+            36,
+            39,
+            73
+          ],
+          "entity_pages": [
+            9,
+            21,
+            23,
+            28,
+            72
+          ]
+        }
+      ]
+    },
+    "ce": {
+      "label": "Dense -> CE",
+      "neutral": 0.7777777777777778,
+      "entity": 0.5555555555555556,
+      "degraded": 2,
+      "improved": 0,
+      "n": 9,
+      "rows": [
+        {
+          "id": 1,
+          "neutral_question": "What was the company's total revenue in fiscal year 2025?",
+          "entity_question": "What was Microsoft's total revenue in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            21,
+            28,
+            30,
+            36,
+            71
+          ],
+          "entity_pages": [
+            21,
+            24,
+            25,
+            28,
+            72
+          ]
+        },
+        {
+          "id": 3,
+          "neutral_question": "What was the company's operating income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's operating income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            28,
+            39,
+            60,
+            71
+          ],
+          "entity_pages": [
+            21,
+            25,
+            28,
+            69,
+            71
+          ]
+        },
+        {
+          "id": 4,
+          "neutral_question": "What was the company's net income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's net income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            28,
+            30,
+            39,
+            60
+          ],
+          "entity_pages": [
+            21,
+            25,
+            28,
+            72
+          ]
+        },
+        {
+          "id": 5,
+          "neutral_question": "What was the company's diluted earnings per share in fiscal year 2025?",
+          "entity_question": "What was Microsoft's diluted earnings per share in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            8,
+            36,
+            40,
+            48,
+            66
+          ],
+          "entity_pages": [
+            21,
+            24,
+            36,
+            48,
+            69
+          ]
+        },
+        {
+          "id": 6,
+          "neutral_question": "What were the company's total assets as of June 30, 2025?",
+          "entity_question": "What were Microsoft's total assets as of June 30, 2025?",
+          "primary": [
+            38
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            38,
+            44,
+            51,
+            54,
+            58
+          ],
+          "entity_pages": [
+            38,
+            63,
+            69,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 7,
+          "neutral_question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+          "entity_question": "How much cash and cash equivalents did Microsoft hold at June 30, 2025?",
+          "primary": [
+            38,
+            39
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            38,
+            39,
+            40,
+            51,
+            63
+          ],
+          "entity_pages": [
+            38,
+            39,
+            51,
+            63,
+            72
+          ]
+        },
+        {
+          "id": 10,
+          "neutral_question": "What business segments does the company report?",
+          "entity_question": "What business segments does Microsoft report?",
+          "primary": [
+            11
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            11,
+            12,
+            22,
+            69,
+            70
+          ],
+          "entity_pages": [
+            11,
+            12,
+            15,
+            69,
+            70
+          ]
+        },
+        {
+          "id": 11,
+          "neutral_question": "How many people does the company employ?",
+          "entity_question": "How many people does Microsoft employ?",
+          "primary": [
+            16
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            2,
+            4,
+            16,
+            69
+          ],
+          "entity_pages": [
+            2,
+            4,
+            5,
+            16,
+            69
+          ]
+        },
+        {
+          "id": 17,
+          "neutral_question": "What was the company's gross margin in fiscal year 2025?",
+          "entity_question": "What was Microsoft's gross margin in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            25,
+            28,
+            30,
+            36
+          ],
+          "entity_pages": [
+            21,
+            23,
+            24,
+            25,
+            28
+          ]
+        }
+      ]
+    },
+    "rrf": {
+      "label": "Dense + CE -> RRF",
+      "neutral": 0.8888888888888888,
+      "entity": 0.0,
+      "degraded": 8,
+      "improved": 0,
+      "n": 9,
+      "rows": [
+        {
+          "id": 1,
+          "neutral_question": "What was the company's total revenue in fiscal year 2025?",
+          "entity_question": "What was Microsoft's total revenue in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            27,
+            36,
+            39,
+            71,
+            72
+          ],
+          "entity_pages": [
+            9,
+            25,
+            28,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 3,
+          "neutral_question": "What was the company's operating income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's operating income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            22,
+            28,
+            36,
+            39,
+            71
+          ],
+          "entity_pages": [
+            21,
+            22,
+            28,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 4,
+          "neutral_question": "What was the company's net income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's net income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            28,
+            36,
+            37,
+            39,
+            60
+          ],
+          "entity_pages": [
+            21,
+            25,
+            28,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 5,
+          "neutral_question": "What was the company's diluted earnings per share in fiscal year 2025?",
+          "entity_question": "What was Microsoft's diluted earnings per share in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            7,
+            8,
+            36,
+            40,
+            66
+          ],
+          "entity_pages": [
+            9,
+            21,
+            67,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 6,
+          "neutral_question": "What were the company's total assets as of June 30, 2025?",
+          "entity_question": "What were Microsoft's total assets as of June 30, 2025?",
+          "primary": [
+            38
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            8,
+            38,
+            39,
+            57,
+            58
+          ],
+          "entity_pages": [
+            9,
+            21,
+            23,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 7,
+          "neutral_question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+          "entity_question": "How much cash and cash equivalents did Microsoft hold at June 30, 2025?",
+          "primary": [
+            38,
+            39
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            8,
+            30,
+            38,
+            39
+          ],
+          "entity_pages": [
+            9,
+            21,
+            67,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 10,
+          "neutral_question": "What business segments does the company report?",
+          "entity_question": "What business segments does Microsoft report?",
+          "primary": [
+            11
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            12,
+            22,
+            41,
+            47,
+            73
+          ],
+          "entity_pages": [
+            12,
+            22,
+            23,
+            41,
+            70
+          ]
+        },
+        {
+          "id": 11,
+          "neutral_question": "How many people does the company employ?",
+          "entity_question": "How many people does Microsoft employ?",
+          "primary": [
+            16
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            2,
+            5,
+            16,
+            69,
+            78
+          ],
+          "entity_pages": [
+            2,
+            4,
+            5,
+            15,
+            25
+          ]
+        },
+        {
+          "id": 17,
+          "neutral_question": "What was the company's gross margin in fiscal year 2025?",
+          "entity_question": "What was Microsoft's gross margin in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            21,
+            22,
+            30,
+            36,
+            39
+          ],
+          "entity_pages": [
+            9,
+            21,
+            23,
+            25,
+            28
+          ]
+        }
+      ]
+    },
+    "prod": {
+      "label": "Production",
+      "neutral": 0.8888888888888888,
+      "entity": 0.7222222222222222,
+      "degraded": 2,
+      "improved": 0,
+      "n": 9,
+      "rows": [
+        {
+          "id": 1,
+          "neutral_question": "What was the company's total revenue in fiscal year 2025?",
+          "entity_question": "What was Microsoft's total revenue in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            25,
+            27,
+            36,
+            71,
+            72
+          ],
+          "entity_pages": [
+            23,
+            25,
+            36,
+            71,
+            72
+          ]
+        },
+        {
+          "id": 3,
+          "neutral_question": "What was the company's operating income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's operating income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            25,
+            36,
+            39,
+            69,
+            71
+          ],
+          "entity_pages": [
+            24,
+            25,
+            36,
+            69,
+            71
+          ]
+        },
+        {
+          "id": 4,
+          "neutral_question": "What was the company's net income in fiscal year 2025?",
+          "entity_question": "What was Microsoft's net income in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            36,
+            37,
+            39,
+            40,
+            48
+          ],
+          "entity_pages": [
+            24,
+            36,
+            37,
+            39,
+            48
+          ]
+        },
+        {
+          "id": 5,
+          "neutral_question": "What was the company's diluted earnings per share in fiscal year 2025?",
+          "entity_question": "What was Microsoft's diluted earnings per share in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            8,
+            36,
+            40,
+            48,
+            66
+          ],
+          "entity_pages": [
+            21,
+            24,
+            36,
+            48,
+            72
+          ]
+        },
+        {
+          "id": 6,
+          "neutral_question": "What were the company's total assets as of June 30, 2025?",
+          "entity_question": "What were Microsoft's total assets as of June 30, 2025?",
+          "primary": [
+            38
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            8,
+            38,
+            39,
+            57,
+            58
+          ],
+          "entity_pages": [
+            21,
+            23,
+            38,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 7,
+          "neutral_question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+          "entity_question": "How much cash and cash equivalents did Microsoft hold at June 30, 2025?",
+          "primary": [
+            38,
+            39
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.5,
+          "neutral_pages": [
+            8,
+            30,
+            38,
+            39,
+            56
+          ],
+          "entity_pages": [
+            21,
+            38,
+            56,
+            72,
+            73
+          ]
+        },
+        {
+          "id": 10,
+          "neutral_question": "What business segments does the company report?",
+          "entity_question": "What business segments does Microsoft report?",
+          "primary": [
+            11
+          ],
+          "neutral_recall": 0.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            12,
+            22,
+            41,
+            47,
+            73
+          ],
+          "entity_pages": [
+            12,
+            22,
+            23,
+            41,
+            70
+          ]
+        },
+        {
+          "id": 11,
+          "neutral_question": "How many people does the company employ?",
+          "entity_question": "How many people does Microsoft employ?",
+          "primary": [
+            16
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 0.0,
+          "neutral_pages": [
+            2,
+            5,
+            16,
+            69,
+            78
+          ],
+          "entity_pages": [
+            2,
+            4,
+            5,
+            15,
+            25
+          ]
+        },
+        {
+          "id": 17,
+          "neutral_question": "What was the company's gross margin in fiscal year 2025?",
+          "entity_question": "What was Microsoft's gross margin in fiscal year 2025?",
+          "primary": [
+            36
+          ],
+          "neutral_recall": 1.0,
+          "entity_recall": 1.0,
+          "neutral_pages": [
+            21,
+            23,
+            25,
+            30,
+            36
+          ],
+          "entity_pages": [
+            21,
+            23,
+            24,
+            25,
+            36
+          ]
+        }
+      ]
+    }
+  }
+}

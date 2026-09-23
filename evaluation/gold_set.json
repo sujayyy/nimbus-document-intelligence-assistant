@@ -1,141 +1,361 @@
-[
-  {
-    "id": 1,
-    "question": "What was the company's revenue?",
-    "type": "factual",
-    "expected_pages": [36, 71],
-    "answer": "Microsoft's total revenue was $281,724 million in fiscal year 2025, compared with $245,122 million in fiscal year 2024 and $211,915 million in fiscal year 2023."
+{
+  "document": {
+    "document_id": "b7e7f7e4-4fc9-45c1-ab4f-e817b878df3a",
+    "file": "Microsoft annual report (FY2025)",
+    "physical_pages": 80,
+    "pages_with_text": 78,
+    "indexed_chunks": 127
   },
-  {
-    "id": 2,
-    "question": "What was the company's revenue in fiscal year 2025?",
-    "type": "factual",
-    "expected_pages": [36],
-    "answer": "Microsoft's total revenue in fiscal year 2025 was $281,724 million."
+  "page_convention": "Physical 1-based PDF pages, NOT printed page numbers (physical page 36 shows printed '35'). Pages with no extractable text are skipped, so numbering has gaps.",
+  "labelling": {
+    "primary_pages": "Evidence that MUST be retrieved. Drives Page Recall.",
+    "acceptable_pages": "Genuinely supporting evidence. Not counted as false positives in Adjusted Page Precision."
   },
-  {
-    "id": 3,
-    "question": "How did revenue change compared with the previous fiscal year?",
-    "type": "comparison",
-    "expected_pages": [36],
-    "answer": "Revenue increased from $245,122 million in fiscal year 2024 to $281,724 million in fiscal year 2025, an increase of approximately 15%."
+  "counts": {
+    "answerable": 18,
+    "unanswerable": 6,
+    "total": 24
   },
-  {
-    "id": 4,
-    "question": "What business segments are discussed in the document?",
-    "type": "factual",
-    "expected_pages": [22],
-    "answer": "Microsoft reports three business segments: Productivity and Business Processes, Intelligent Cloud, and More Personal Computing."
-  },
-  {
-    "id": 5,
-    "question": "What was the company's operating income?",
-    "type": "factual",
-    "expected_pages": [36],
-    "answer": "Microsoft's operating income was $128,528 million in fiscal year 2025, compared with $109,433 million in fiscal year 2024 and $88,523 million in fiscal year 2023."
-  },
-  {
-    "id": 6,
-    "question": "What was the company's net income?",
-    "type": "factual",
-    "expected_pages": [36],
-    "answer": "Microsoft's net income was $101,832 million in fiscal year 2025, compared with $88,136 million in fiscal year 2024 and $72,361 million in fiscal year 2023."
-  },
-  {
-    "id": 7,
-    "question": "What was the company's total assets?",
-    "type": "factual",
-    "expected_pages": [38],
-    "answer": "Microsoft's total assets were $619,003 million as of June 30, 2025, compared with $512,163 million as of June 30, 2024."
-  },
-  {
-    "id": 8,
-    "question": "What was the company's total cash and cash equivalents?",
-    "type": "factual",
-    "expected_pages": [39],
-    "answer": "Microsoft had $30,242 million in cash and cash equivalents at June 30, 2025, compared with $18,315 million at June 30, 2024."
-  },
-  {
-    "id": 9,
-    "question": "What are the main risks identified in the document?",
-    "type": "summary",
-    "expected_pages": [10, 33, 35],
-    "answer": "The document identifies risks including foreign exchange, interest rate, credit, and equity price risks, along with legal, tax, regulatory, and other business risks."
-  },
-  {
-   "id": 10,
-   "question": "What does the document say about research and development?",
-   "type": "factual",
-   "expected_pages": [17],
-   "answer": "Microsoft makes significant investments in research and development for new and existing products, services, and technologies, and plans to continue investing across operating segments."
-  },
-  {
-    "id": 11,
-    "question": "Compare the company's revenue across two fiscal years.",
-    "type": "comparison",
-    "expected_pages": [36],
-    "answer": "Revenue increased from $245,122 million in fiscal year 2024 to $281,724 million in fiscal year 2025, an increase of approximately 15%."
-  },
-  {
-     "id": 12,
-  "question": "What were Microsoft's revenue, operating income, and net income in fiscal year 2025?",
-  "type": "summary",
-  "expected_pages": [36],
-  "answer": "In fiscal year 2025, Microsoft reported revenue of $281,724 million, operating income of $128,528 million, and net income of $101,832 million."
-},
-  {
-    "id": 13,
-  "question": "What does the document say about employees?",
-  "type": "factual",
-  "expected_pages": [16],
-  "answer": "The document provides information about Microsoft's employees, including its total workforce and the number of employees in the United States and internationally."},
-  {
-    "id": 14,
-  "question": "What does the document say about competition?",
-  "type": "factual",
-  "expected_pages": [13],
-  "answer": "Microsoft describes competition across its products and businesses, including competition for Office, Windows, Microsoft Defender, Enterprise Mobility + Security, LinkedIn, and Dynamics."
-},
-  {
-    "id": 15,
-    "question": "What does the document say about artificial intelligence?",
-    "type": "factual",
-    "expected_pages": [6],
-    "answer": "The report describes AI as a major strategic priority for Microsoft and discusses AI innovation across cloud and AI infrastructure, Copilots, agents, products, and services."
-  },
-  {
-    "id": 16,
-    "question": "What does the document say about cybersecurity?",
-    "type": "factual",
-    "expected_pages": [4, 6],
-    "answer": "Microsoft identifies security as a top priority and describes its Secure Future Initiative, security investments, threat detection and response, identity protection, and secure-by-design practices."
-  },
-  {
-    "id": 17,
-    "question": "What does the document say about cloud services?",
-    "type": "factual",
-    "expected_pages": [13, 22],
-    "answer": "Microsoft describes its cloud business as a core part of its strategy, including Azure, Microsoft Cloud, cloud-based services, datacenters, and intelligent cloud capabilities."
-  },
-  {
-    "id": 18,
-    "question": "What was the company's revenue in 2035?",
-    "type": "unanswerable",
-    "expected_pages": [],
-    "answer": "The document does not provide revenue information for fiscal year 2035."
-  },
-  {
-    "id": 19,
-    "question": "Who will win the FIFA World Cup in 2030?",
-    "type": "unanswerable",
-    "expected_pages": [],
-    "answer": "The document does not contain information that can answer this question."
-  },
-  {
-    "id": 20,
-    "question": "What is the weather in Hyderabad today?",
-    "type": "unanswerable",
-    "expected_pages": [],
-    "answer": "The document does not contain weather information for Hyderabad."
-  }
-]
+  "cases": [
+    {
+      "id": 1,
+      "question": "What was the company's total revenue in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        25,
+        71,
+        72
+      ],
+      "answer": "Total revenue was $281,724 million in fiscal year 2025.",
+      "evidence_note": "281,724 appears on pages 24, 25, 36, 71, 72; p36 is the INCOME STATEMENTS source"
+    },
+    {
+      "id": 2,
+      "question": "How did revenue change compared with the previous fiscal year?",
+      "type": "comparison",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        25,
+        71,
+        72
+      ],
+      "answer": "Revenue increased from $245,122 million in fiscal year 2024 to $281,724 million in fiscal year 2025, an increase of approximately 15%.",
+      "evidence_note": "both figures co-occur on 24, 25, 36, 71, 72"
+    },
+    {
+      "id": 3,
+      "question": "What was the company's operating income in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        25,
+        71
+      ],
+      "answer": "Operating income was $128,528 million in fiscal year 2025.",
+      "evidence_note": "128,528 appears on pages 24, 25, 36, 71"
+    },
+    {
+      "id": 4,
+      "question": "What was the company's net income in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        37,
+        39,
+        40,
+        48
+      ],
+      "answer": "Net income was $101,832 million in fiscal year 2025.",
+      "evidence_note": "101,832 appears on pages 24, 36, 37, 39, 40, 48"
+    },
+    {
+      "id": 5,
+      "question": "What was the company's diluted earnings per share in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        48
+      ],
+      "answer": "Diluted earnings per share was $13.64 in fiscal year 2025.",
+      "evidence_note": "13.64 appears on pages 24, 36, 48",
+      "probe": "TRUNCATION TEST: on p36 this figure sits in the chunk tail beyond the embedder's 256-token window, so dense retrieval cannot see it via p36."
+    },
+    {
+      "id": 6,
+      "question": "What were the company's total assets as of June 30, 2025?",
+      "type": "factual",
+      "primary_pages": [
+        38
+      ],
+      "acceptable_pages": [],
+      "answer": "Total assets were $619,003 million as of June 30, 2025.",
+      "evidence_note": "619,003 appears ONLY on page 38 (BALANCE SHEETS) - unambiguous case"
+    },
+    {
+      "id": 7,
+      "question": "How much cash and cash equivalents did the company hold at June 30, 2025?",
+      "type": "factual",
+      "primary_pages": [
+        38,
+        39
+      ],
+      "acceptable_pages": [
+        50
+      ],
+      "answer": "Cash and cash equivalents were $30,242 million at June 30, 2025, compared with $18,315 million at June 30, 2024.",
+      "evidence_note": "30,242 on pages 38, 39, 50. Both 38 (balance) and 39 (cash flows) are legitimate primary sources; v1 listed only 39."
+    },
+    {
+      "id": 8,
+      "question": "What were research and development expenses in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        27
+      ],
+      "acceptable_pages": [
+        36,
+        24
+      ],
+      "answer": "Research and development expenses were $32,488 million in fiscal year 2025, a 10% increase from $29,510 million in fiscal year 2024.",
+      "evidence_note": "p27 OPERATING EXPENSES section has the figure and percentage change; p36 has the income-statement line",
+      "probe": "Tests figure-vs-narrative discrimination against case 9."
+    },
+    {
+      "id": 9,
+      "question": "How does the document describe the company's approach to developing new products and services?",
+      "type": "factual",
+      "primary_pages": [
+        17
+      ],
+      "acceptable_pages": [
+        11,
+        16,
+        27,
+        44
+      ],
+      "answer": "The company's success is based on its ability to create new and compelling products, services, and experiences, embrace disruptive technology trends, enter new geographic and product markets, and drive broad adoption. It develops most products and services internally to maintain competitive advantage through product differentiation.",
+      "evidence_note": "p17 'RESEARCH AND DEVELOPMENT / Product and Service Development' carries this text. Reworded because the prior phrasing collided with case 8 (R&D expenses, p27) - both asked about 'research and development' and the system answered both from p27, correctly."
+    },
+    {
+      "id": 10,
+      "question": "What business segments does the company report?",
+      "type": "factual",
+      "primary_pages": [
+        11
+      ],
+      "acceptable_pages": [
+        12,
+        22,
+        24,
+        25,
+        62,
+        69,
+        71
+      ],
+      "answer": "Productivity and Business Processes, Intelligent Cloud, and More Personal Computing.",
+      "evidence_note": "CORRECTS v1 case 4. Pages naming all three segments: 11, 24, 25, 62, 69, 71. v1's page 22 does NOT contain 'Intelligent Cloud'."
+    },
+    {
+      "id": 11,
+      "question": "How many people does the company employ?",
+      "type": "factual",
+      "primary_pages": [
+        16
+      ],
+      "acceptable_pages": [],
+      "answer": "Approximately 228,000 people on a full-time basis, with 125,000 in the U.S. and 103,000 internationally, as of June 30, 2025.",
+      "evidence_note": "228,000 appears ONLY on page 16 (HUMAN CAPITAL RESOURCES) - unambiguous case"
+    },
+    {
+      "id": 12,
+      "question": "What does the document say about competition?",
+      "type": "factual",
+      "primary_pages": [
+        13,
+        14
+      ],
+      "acceptable_pages": [
+        16,
+        22,
+        21
+      ],
+      "answer": "Microsoft describes intense competition across all its businesses, including competition for Office, Windows, Microsoft Defender, Enterprise Mobility + Security, LinkedIn, Dynamics, cloud services, gaming, and search.",
+      "evidence_note": "COMPETITION headers on 13, 14, 16; 'compet*' density: p14=13, p16=10, p13=9. v1 listed only 13."
+    },
+    {
+      "id": 13,
+      "question": "What market risks does the document disclose?",
+      "type": "summary",
+      "primary_pages": [
+        35
+      ],
+      "acceptable_pages": [
+        29,
+        53,
+        10,
+        33
+      ],
+      "answer": "Microsoft discloses foreign currency, interest rate, credit, and equity price risks, and provides a value-at-risk sensitivity analysis.",
+      "evidence_note": "CORRECTS v1 case 9. p35 = QUANTITATIVE AND QUALITATIVE DISCLOSURES ABOUT MARKET RISK (9 risk mentions). v1's p33 had 1 mention and covers equity-investment accounting; p10 is the forward-looking-statements notice."
+    },
+    {
+      "id": 14,
+      "question": "What does the document say about artificial intelligence?",
+      "type": "factual",
+      "primary_pages": [
+        3,
+        4
+      ],
+      "acceptable_pages": [
+        2,
+        5,
+        10,
+        11,
+        13,
+        14
+      ],
+      "answer": "The report describes AI as Microsoft's central strategic priority, covering AI infrastructure and datacenters, Copilot and Copilot Studio adoption, AI agents, and AI integration across products and services.",
+      "evidence_note": "CORRECTS v1 case 15. AI-mention density: p4=16, p3=12, p14=11, p5=9. v1's page 6 has only 2 AI mentions."
+    },
+    {
+      "id": 15,
+      "question": "What does the document say about security and cybersecurity?",
+      "type": "factual",
+      "primary_pages": [
+        2,
+        11
+      ],
+      "acceptable_pages": [
+        4,
+        12,
+        13,
+        14
+      ],
+      "answer": "Security is one of three core business priorities described as the company's North Star, alongside quality and AI innovation, with significant progress reported on the Secure Future Initiative. The company prioritizes security above all else and offers integrated AI-driven products addressing security, compliance, identity, management, and privacy across multi-cloud, application, and device assets.",
+      "evidence_note": "p2 carries 'North Star: security, quality, and AI innovation' and the Secure Future Initiative; p11 carries 'We prioritize security above all else ... integrated AI-driven products'. CORRECTS the earlier primary=[14]: p14 mentions security only as product categories, which raw mention-density wrongly ranked highest."
+    },
+    {
+      "id": 16,
+      "question": "What does the document say about cloud services?",
+      "type": "factual",
+      "primary_pages": [
+        13,
+        23,
+        69
+      ],
+      "acceptable_pages": [
+        11,
+        22,
+        24,
+        26,
+        72
+      ],
+      "answer": "Microsoft describes its cloud business as central to its strategy, including Azure, the Microsoft Cloud, cloud infrastructure and datacenters, and cloud-based service delivery across segments.",
+      "evidence_note": "cloud-mention density: p69=16, p23=16, p13=16, p24=13, p26=11, p72=10. v1 listed 13 and 22."
+    },
+    {
+      "id": 17,
+      "question": "What was the company's gross margin in fiscal year 2025?",
+      "type": "factual",
+      "primary_pages": [
+        36
+      ],
+      "acceptable_pages": [
+        24,
+        25,
+        26
+      ],
+      "answer": "Gross margin was $193,893 million in fiscal year 2025, compared with $171,008 million in fiscal year 2024.",
+      "evidence_note": "193,893 confirmed on the p36 income statement, within the embedder-visible portion of the chunk"
+    },
+    {
+      "id": 18,
+      "question": "What does the document say about datacenters and operations?",
+      "type": "factual",
+      "primary_pages": [
+        17
+      ],
+      "acceptable_pages": [
+        11,
+        16,
+        30
+      ],
+      "answer": "Microsoft operates regional operations service centers in the Americas, Asia Pacific, Europe, and the Middle East, and operates datacenters in each region, aligning datacenter locations and server capacity to customer demand.",
+      "evidence_note": "p17 OPERATIONS section header and the quoted text confirmed"
+    },
+    {
+      "id": 19,
+      "question": "What was the company's revenue in fiscal year 2035?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not provide revenue information for fiscal year 2035.",
+      "evidence_note": "'2035' absent from the document"
+    },
+    {
+      "id": 20,
+      "question": "How many patents did the company file during fiscal year 2025?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not provide the number of patents filed.",
+      "evidence_note": "no patent-count language found anywhere in the document",
+      "probe": "IN-DOMAIN distractor: plausible annual-report content that is genuinely absent."
+    },
+    {
+      "id": 21,
+      "question": "What was the company's employee attrition rate in fiscal year 2025?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not disclose an employee attrition or turnover rate.",
+      "evidence_note": "'attrition' and 'turnover rate' absent; note p16 DOES discuss employees, so this tests precision of refusal",
+      "probe": "IN-DOMAIN distractor adjacent to real content on page 16 - the hardest refusal case."
+    },
+    {
+      "id": 22,
+      "question": "What is the company's revenue guidance for fiscal year 2026?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not provide revenue guidance for fiscal year 2026.",
+      "evidence_note": "no FY2026 revenue guidance or forecast language found",
+      "probe": "IN-DOMAIN distractor: forward guidance is plausible in an annual report but absent here."
+    },
+    {
+      "id": 23,
+      "question": "What was the chief executive officer's total compensation in fiscal year 2025?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not disclose executive compensation figures.",
+      "evidence_note": "no CEO total-compensation figure found; compensation detail lives in the proxy statement, not this report",
+      "probe": "IN-DOMAIN distractor: commonly assumed to be in an annual report."
+    },
+    {
+      "id": 24,
+      "question": "Who will win the FIFA World Cup in 2030?",
+      "type": "unanswerable",
+      "primary_pages": [],
+      "acceptable_pages": [],
+      "answer": "The document does not contain information that can answer this question.",
+      "evidence_note": "out-of-domain control, retained from v1"
+    }
+  ]
+}

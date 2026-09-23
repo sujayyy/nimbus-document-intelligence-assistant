@@ -1,0 +1,38 @@
+{
+  "none (baseline)": {
+    "terms": [],
+    "neutral_recall": 0.8888888888888888,
+    "entity_recall": 0.7222222222222222,
+    "gap_pp": -16.666666666666664,
+    "full_recall": 0.8425925925925926
+  },
+  "subject entity only": {
+    "terms": [
+      "june",
+      "microsoft"
+    ],
+    "neutral_recall": 0.8888888888888888,
+    "entity_recall": 0.8888888888888888,
+    "gap_pp": 0.0,
+    "full_recall": 0.8425925925925926
+  },
+  "corpus stopwords df>=0.35": {
+    "terms": [
+      "based",
+      "business",
+      "cloud",
+      "income",
+      "june",
+      "microsoft",
+      "millions",
+      "products",
+      "related",
+      "revenue",
+      "services"
+    ],
+    "neutral_recall": 0.8888888888888888,
+    "entity_recall": 0.8888888888888888,
+    "gap_pp": 0.0,
+    "full_recall": 0.7685185185185186
+  }
+}
