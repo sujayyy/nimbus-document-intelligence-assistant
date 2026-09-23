@@ -358,26 +358,46 @@ flowchart LR
 
 ## Latest Evaluation Results
 
+Produced by `python -m evaluation.run_evaluation` against the unchanged production
+pipeline, over a 24-case gold set: 18 answerable, 6 unanswerable.
+
+### Answer quality — what the user actually gets
+
 | Metric | Result |
 |---|---:|
-| Page Recall | **94.1%** |
-| Page Precision | **25.3%** |
-| Exact Page Match | **0.0%** |
-| Citation Precision | **100%** |
-| Citation Recall | **88.2%** |
-| Correct Refusal Rate | **100%** |
+| Answer Accuracy | **0.830** |
+| Numeric Grounding | **1.000** |
+| Answer Rate | **1.000** (18 / 18) |
+| Correct Refusal Rate | **1.000** (6 / 6) |
 
-### Retrieval Improvement
+### Retrieval diagnostics — debugging aids, not targets
 
-Earlier baseline:
+| Metric | Result |
+|---|---:|
+| Page Recall | **87.0%** |
+| Page Precision (adjusted) | **48.6%** |
+| Citation Recall | **81.5%** |
 
-**71.6% Page Recall**
+### Retired — cannot be improved by retrieval
 
-Latest refined pipeline:
+| Metric | Result | Why retired |
+|---|---:|---|
+| Page Precision (raw) | 22.8% | ceiling is 27.3% |
+| Exact Page Match | 0.0% | maximum achievable is 5.6% |
+| Citation Precision | 100% | enforced by the pipeline, so it can never report a problem |
 
-**94.1% Page Recall**
+### A note on the numbers this README used to report
 
-The improvement came from refining the retrieval pipeline while keeping the evaluation framework separate.
+Earlier versions of this file reported **94.1% Page Recall** and **88.2% Citation
+Recall**, and described an improvement from a 71.6% baseline. Those figures were
+measured against the first version of the gold set, which was subsequently found to
+contain three mislabelled cases and nine under-labelled ones, with 41% of answerable
+cases pointing at a single page of financial tables.
+
+The gold set was rebuilt with two-tier labelling (`primary_pages` / `acceptable_pages`),
+verified page by page against the extracted text. Every figure above comes from that
+corrected set and is reproducible with one command. The retrieval-improvement story is
+real, but it cannot be quantified against a ruler that was itself wrong.
 
 ---
 
@@ -385,6 +405,9 @@ The improvement came from refining the retrieval pipeline while keeping the eval
 
 | Metric | Meaning |
 |---|---|
+| Answer Accuracy | How much of the verified answer the system actually produced |
+| Numeric Grounding | Whether every figure in an answer traces to retrieved text |
+| Answer Rate | Whether answerable questions were answered rather than refused |
 | Page Recall | Whether pages required by the gold set were retrieved |
 | Page Precision | How much of the retrieved page set is relevant |
 | Exact Page Match | Whether the retrieved page set exactly matches the expected set |

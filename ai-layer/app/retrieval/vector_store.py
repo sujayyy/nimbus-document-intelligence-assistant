@@ -19,14 +19,29 @@ class FAISSVectorStore:
         self.index_path = self.index_directory / "index.faiss"
         self.metadata_path = self.index_directory / "metadata.json"
 
+        # Sidecar rather than a new key in metadata.json, so indexes
+        # built before subject-entity detection still load unchanged.
+        self.entities_path = (
+            self.index_directory / "entities.json"
+        )
+
         self.index = None
         self.chunks: list[DocumentChunk] = []
+
+        # Terms so common in this document that they cannot
+        # discriminate between chunks. Empty for older indexes.
+        self.subject_entities: list[str] = []
 
     def build(
         self,
         embeddings: np.ndarray,
         chunks: list[DocumentChunk],
+        subject_entities: list[str] | None = None,
     ) -> None:
+
+        self.subject_entities = list(
+            subject_entities or []
+        )
 
         if len(embeddings) != len(chunks):
             raise ValueError(
@@ -79,6 +94,18 @@ class FAISSVectorStore:
                 indent=2,
             )
 
+        with self.entities_path.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
+
+            json.dump(
+                self.subject_entities,
+                file,
+                ensure_ascii=False,
+                indent=2,
+            )
+
     def load(self) -> None:
 
         if not self.index_path.exists():
@@ -106,6 +133,20 @@ class FAISSVectorStore:
             DocumentChunk(**item)
             for item in metadata
         ]
+
+        # Absent for indexes built before subject-entity detection;
+        # retrieval then behaves exactly as it did before.
+        if self.entities_path.exists():
+
+            with self.entities_path.open(
+                "r",
+                encoding="utf-8",
+            ) as file:
+
+                self.subject_entities = json.load(file)
+
+        else:
+            self.subject_entities = []
 
     def search(
         self,

@@ -1,0 +1,2141 @@
+/* =====================================================
+   BRAND
+===================================================== */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-1) var(--s-2);
+  border-radius: var(--r-card);
+  transition: background var(--d-fast) var(--ease-out);
+}
+
+.brand:hover {
+  background: var(--accent-wash);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+}
+
+.brand-name {
+  font-size: var(--t-md);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.brand-sub {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* -----------------------------------------------------
+   MARK
+
+   Three stacked sheets seen edge-on. The product's
+   whole idea in 18px: paper, layered, with one page
+   lit by the accent.
+----------------------------------------------------- */
+
+.mark {
+  position: relative;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  perspective: 240px;
+}
+
+.mark-sheet {
+  position: absolute;
+  inset: 4px 6px;
+  border: 1.25px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--raised);
+  transform-style: preserve-3d;
+}
+
+.mark-sheet:nth-child(1) {
+  transform: translate3d(-3px, -3px, -6px) rotate(-7deg);
+  opacity: 0.4;
+}
+
+.mark-sheet:nth-child(2) {
+  transform: translate3d(0, 0, -3px) rotate(-3deg);
+  opacity: 0.68;
+}
+
+.mark-sheet:nth-child(3) {
+  border-color: var(--accent);
+  background: var(--sheet);
+  box-shadow: 2px 2px 0 var(--accent-soft);
+}
+
+.mark-sheet:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  inset: auto 3px 3px 3px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--on-accent);
+  opacity: 0.55;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 34px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-control);
+  font-size: var(--t-sm);
+  font-weight: 550;
+  color: var(--ink-2);
+  transition:
+    background var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out),
+    box-shadow var(--d-fast) var(--ease-out);
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--steel-wash);
+  color: var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  color: var(--ink-3);
+  transition:
+    background var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out);
+}
+
+.btn-icon:hover:not(:disabled) {
+  background: var(--steel-wash);
+  color: var(--steel-ink);
+}
+
+.btn-icon:disabled {
+  opacity: 0.35;
+}
+
+/* Touch targets stay >=44px on coarse pointers without
+   inflating the desktop layout. */
+@media (pointer: coarse) {
+  .btn-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .btn {
+    min-height: 44px;
+  }
+}
+
+/* =====================================================
+   STATUS PILL
+===================================================== */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--raised);
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.status-dot {
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink-4);
+}
+
+/* Document connected - warm, because a document is
+   paper, not machinery. */
+.status.is-live {
+  border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+  color: var(--accent-deep);
+}
+
+.status.is-live .status-dot {
+  background: var(--accent);
+  box-shadow: 2px 2px 0 var(--accent-soft);
+  animation: pulse-dot 2.6s var(--ease-in-out) infinite;
+}
+
+/* Pipeline working - steel, matching the cinematic. */
+.status.is-busy {
+  border-color: color-mix(in srgb, var(--steel) 38%, var(--line));
+  color: var(--steel-ink);
+}
+
+.status.is-busy .status-dot {
+  background: var(--steel);
+  box-shadow: 2px 2px 0 var(--line);
+  animation: pulse-dot 1.1s var(--ease-in-out) infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* =====================================================
+   DOCUMENT CARD  (rail)
+
+   Three real layers in 3D space. Hover lifts the stack
+   toward the viewer and fans the pages apart, so the
+   card behaves like an object rather than a rectangle.
+===================================================== */
+
+.doc-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin-bottom: var(--s-2);
+  padding: 0;
+  border-radius: var(--r-card);
+  perspective: 620px;
+  text-align: left;
+}
+
+.doc-card-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: var(--s-3);
+  border: 3px solid var(--line-strong);
+  border-radius: var(--r-card);
+  background: var(--raised);
+  box-shadow: var(--sh-1);
+  transform-style: preserve-3d;
+  transition:
+    border-color var(--d-mid) var(--ease-out),
+    box-shadow var(--d-mid) var(--ease-out),
+    background var(--d-mid) var(--ease-out);
+}
+
+.doc-card:hover .doc-card-body {
+  box-shadow: var(--sh-3);
+  transform: translate(-2px, -2px);
+}
+
+.doc-card.is-active .doc-card-body {
+  background: var(--accent);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+/* The spine: a coloured edge on the active document,
+   like a tab on a physical file. */
+.doc-card.is-active .doc-card-body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 6px;
+  background: var(--ink);
+}
+
+.doc-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc-card-name {
+  overflow: hidden;
+  font-size: var(--t-sm);
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.doc-card-meta {
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+}
+
+.doc-card-remove {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  color: var(--ink-4);
+  opacity: 0;
+  transition:
+    opacity var(--d-fast) var(--ease-out),
+    background var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out);
+}
+
+.doc-card:hover .doc-card-remove,
+.doc-card-remove:focus-visible {
+  opacity: 1;
+}
+
+.doc-card-remove:hover {
+  background: var(--danger-wash);
+  color: var(--danger);
+}
+
+@media (pointer: coarse) {
+  .doc-card-remove {
+    opacity: 1;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* -----------------------------------------------------
+   PAPER STACK  (inside a document card)
+----------------------------------------------------- */
+
+.stack {
+  position: relative;
+  flex: none;
+  width: 30px;
+  height: 36px;
+  transform-style: preserve-3d;
+}
+
+.stack-sheet {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--sheet-line);
+  border-radius: 3px;
+  background: var(--sheet-2);
+  transition: transform var(--d-slow) var(--ease-pop);
+}
+
+.stack-sheet:nth-child(1) {
+  transform: translate3d(0, 0, -8px) rotate(-6deg);
+  opacity: 0.55;
+}
+
+.stack-sheet:nth-child(2) {
+  transform: translate3d(0, 0, -4px) rotate(-2.5deg);
+  opacity: 0.78;
+}
+
+.stack-sheet:nth-child(3) {
+  display: flex;
+  align-items: flex-end;
+  padding: 4px;
+  background: var(--sheet);
+  box-shadow: var(--sh-flat);
+}
+
+.doc-card:hover .stack-sheet:nth-child(1) {
+  transform: translate3d(-4px, -2px, -8px) rotate(-11deg);
+}
+
+.doc-card:hover .stack-sheet:nth-child(2) {
+  transform: translate3d(-2px, -1px, -4px) rotate(-5deg);
+}
+
+.doc-card.is-active .doc-card-name,
+.doc-card.is-active .doc-card-meta,
+.doc-card.is-active .meta-chunks,
+.doc-card.is-active .doc-card-remove {
+  color: var(--ink);
+}
+
+.doc-card.is-active .stack-sheet:nth-child(3) {
+  border-color: var(--ink);
+}
+
+.stack-tick {
+  width: 100%;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--sheet-line);
+}
+
+.doc-card.is-active .stack-tick {
+  background: var(--accent);
+}
+
+/* =====================================================
+   TURN
+
+   Not a chat bubble column. Each exchange is laid out
+   like a page in a research notebook: a narrow margin
+   rail on the left carrying page ticks, and the body
+   text on the sheet. The margin is where evidence
+   lives - which is the whole point of the product.
+===================================================== */
+
+.turn {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: var(--s-4);
+  margin-bottom: var(--s-6);
+}
+
+.turn-margin {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-1);
+  padding-top: 3px;
+}
+
+/* Hairline running down the margin, like a ruled page */
+.turn-margin::before {
+  content: "";
+  position: absolute;
+  top: 30px;
+  bottom: -28px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    var(--line) 0%,
+    transparent 100%
+  );
+}
+
+.turn:last-child .turn-margin::before {
+  display: none;
+}
+
+.turn-badge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--raised);
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  color: var(--ink-4);
+}
+
+.turn.is-question .turn-badge {
+  border-color: var(--line-strong);
+  color: var(--ink-3);
+}
+
+.turn.is-answer .turn-badge {
+  border-color: var(--accent);
+  background: var(--raised);
+  color: var(--accent-deep);
+  box-shadow: 3px 3px 0 var(--accent-soft);
+}
+
+/* -----------------------------------------------------
+   QUESTION
+----------------------------------------------------- */
+
+.question {
+  padding-top: 2px;
+}
+
+.question-label {
+  margin-bottom: var(--s-2);
+}
+
+.question-text {
+  font-size: var(--t-xl);
+  font-weight: 800;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+/* -----------------------------------------------------
+   ANSWER
+----------------------------------------------------- */
+
+.answer {
+  min-width: 0;
+}
+
+.answer-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-2);
+}
+
+.answer-name {
+  font-size: var(--t-sm);
+  font-weight: 650;
+  color: var(--ink-2);
+}
+
+.answer-time {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  color: var(--ink-4);
+}
+
+.answer-body {
+  color: var(--ink-2);
+  font-size: var(--t-md);
+  line-height: var(--lh-body);
+}
+
+/* Markers are absolutely positioned off the baseline, so
+   nothing inside a paragraph can inflate its leading. */
+.answer-body .md p,
+.answer-body .md li {
+  line-height: var(--lh-body);
+}
+
+.answer.is-error .answer-body {
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid color-mix(in srgb, var(--danger) 28%, var(--line));
+  border-radius: var(--r-card);
+  background: var(--danger-wash);
+  color: var(--danger);
+}
+
+/* =====================================================
+   MARKDOWN
+===================================================== */
+
+.md > * + * {
+  margin-top: var(--s-3);
+}
+
+.md h2 {
+  font-size: var(--t-lg);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.md h3 {
+  font-size: var(--t-md);
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.md h4 {
+  font-size: var(--t-base);
+  font-weight: 650;
+  color: var(--ink-2);
+}
+
+.md p {
+  text-wrap: pretty;
+}
+
+.md strong {
+  font-weight: 680;
+  color: var(--ink);
+}
+
+.md ul,
+.md ol {
+  margin: 0;
+  padding-left: var(--s-5);
+}
+
+.md li + li {
+  margin-top: var(--s-1);
+}
+
+.md li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.md hr {
+  height: 1px;
+  margin: var(--s-4) 0;
+  border: none;
+  background: var(--line);
+}
+
+.md pre {
+  overflow-x: auto;
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--sunken);
+}
+
+.md pre code {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--ink-2);
+}
+
+.md-code {
+  padding: 0.12em 0.4em;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--sunken);
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--accent-deep);
+}
+
+/* Tables: documents produce them constantly, so they
+   get real treatment rather than browser defaults. */
+.md-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--raised);
+}
+
+.md table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+}
+
+.md th {
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--line);
+  background: var(--sunken);
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: 500;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.md td {
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.md tr:last-child td {
+  border-bottom: none;
+}
+
+/* -----------------------------------------------------
+   CITATION MARKER
+
+   Quiet at rest, loud on contact.
+
+   Filled yellow blocks inline made the references louder
+   than the answer, and being taller than the line box
+   they forced the paragraph's leading open. So the rest
+   state is a superscript with a highlighter underline -
+   present, clickable, out of the way - and the yellow
+   fill arrives only on hover or when the page is the
+   active one.
+
+   The collected GROUNDED IN row below the answer keeps
+   the full-strength treatment. That is the right place
+   for emphasis: one deliberate statement of what the
+   answer stands on, instead of six interruptions
+   through the middle of it.
+----------------------------------------------------- */
+
+.cite {
+  display: inline;
+  margin: 0 0.1em;
+  padding: 0 0.12em;
+  border: none;
+  border-bottom: 2px solid var(--accent);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.62em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+
+  /* Raised off the baseline without super/sub, which
+     would let the marker stretch the line box again. */
+  position: relative;
+  top: -0.42em;
+
+  line-height: 1;
+  color: var(--ink-3);
+  vertical-align: baseline;
+  transition:
+    background var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out);
+}
+
+.cite:hover,
+.cite.is-on {
+  background: var(--accent);
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+
+
+/* =====================================================
+   EVIDENCE CARD
+===================================================== */
+
+.ev-card {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--s-3);
+  padding: var(--s-3);
+  border: 3px solid var(--line-strong);
+  border-radius: var(--r-card);
+  background: var(--raised);
+  box-shadow: var(--sh-1);
+  text-align: left;
+  transition:
+    border-color var(--d-mid) var(--ease-out),
+    box-shadow var(--d-mid) var(--ease-out);
+}
+
+.ev-card:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--sh-2);
+}
+
+.ev-card.is-on {
+  background: var(--accent);
+  box-shadow: 5px 5px 0 var(--ink);
+  transform: translate(-2px, -2px);
+}
+
+.ev-card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.ev-index {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--accent-deep);
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-card.is-on .ev-index {
+  background: var(--ink);
+  color: var(--accent);
+}
+
+.ev-page {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.ev-doc {
+  overflow: hidden;
+  margin-top: 2px;
+  font-size: var(--label-size);
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ev-excerpt {
+  margin-top: var(--s-2);
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line-soft);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.ev-empty {
+  padding: var(--s-5) var(--s-4);
+  text-align: center;
+  color: var(--ink-4);
+  font-size: var(--t-sm);
+  line-height: 1.6;
+}
+
+/* =====================================================
+   COMMAND BAR
+===================================================== */
+
+.cmd-wrap {
+  position: relative;
+  z-index: 2;
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  padding-bottom: calc(var(--s-4) + env(safe-area-inset-bottom, 0px));
+}
+
+.cmd-inner {
+  width: 100%;
+  max-width: var(--reading-w);
+  margin: 0 auto;
+}
+
+.cmd {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-2);
+  padding: var(--s-2);
+  border: 3px solid var(--line-strong);
+  border-radius: var(--r-control);
+  background: var(--raised);
+  box-shadow: var(--sh-2);
+  transition:
+    border-color var(--d-mid) var(--ease-out),
+    box-shadow var(--d-mid) var(--ease-out);
+}
+
+.cmd:focus-within {
+  border-color: var(--accent);
+  box-shadow: 5px 5px 0 var(--accent-soft);
+}
+
+.cmd textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 168px;
+  padding: var(--s-2) var(--s-1);
+  border: none;
+  background: none;
+  font-size: var(--t-md);
+  line-height: 1.55;
+  color: var(--ink);
+  resize: none;
+  outline: none;
+}
+
+.cmd textarea::placeholder {
+  color: var(--ink-4);
+}
+
+.cmd textarea:disabled {
+  color: var(--ink-3);
+}
+
+.cmd-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.send {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-control);
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: var(--sh-accent);
+  transition:
+    background var(--d-fast) var(--ease-out),
+    box-shadow var(--d-fast) var(--ease-out),
+    opacity var(--d-fast) var(--ease-out);
+}
+
+.send:hover:not(:disabled) {
+  background: var(--accent-deep);
+}
+
+.send:disabled {
+  background: var(--line-strong);
+  color: var(--ink-4);
+  box-shadow: none;
+}
+
+.mic.is-live {
+  background: var(--danger-wash);
+  color: var(--danger);
+}
+
+.cmd-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+  padding: 0 var(--s-1);
+}
+
+.cmd-hint {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+  .cmd-wrap {
+    padding-inline: var(--s-4);
+  }
+
+  .cmd-foot .cmd-hint:last-child {
+    display: none;
+  }
+}
+
+/* =====================================================
+   DROP ZONE
+===================================================== */
+
+.drop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-5);
+  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+.drop-frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-7) var(--s-8);
+  border: 2px dashed var(--accent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--raised) 88%, transparent);
+  box-shadow: var(--sh-4);
+  text-align: center;
+}
+
+.drop-title {
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.drop-sub {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* =====================================================
+   HERO / EMPTY STATE
+===================================================== */
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--s-6) 0 var(--s-4);
+  text-align: center;
+}
+
+.hero-title {
+  margin-top: var(--s-6);
+  font-size: var(--t-3xl);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.hero-sub {
+  max-width: 40ch;
+  margin-top: var(--s-3);
+  color: var(--ink-3);
+  font-size: var(--t-md);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+/* -----------------------------------------------------
+   3D DOCUMENT OBJECT
+
+   Real CSS 3D - layered sheets on separate Z planes
+   inside a shared perspective, rotated as one body by
+   a spring that follows the cursor. No WebGL, so it
+   costs nothing on load and degrades to a flat stack
+   when reduced motion is on.
+----------------------------------------------------- */
+
+.doc3d {
+  position: relative;
+  width: 200px;
+  height: 320px;
+  perspective: 1100px;
+}
+
+.doc3d-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.doc3d-sheet {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 248px;
+  border: 1px solid var(--sheet-line);
+  border-radius: var(--r-sheet);
+  background: var(--sheet);
+  box-shadow: 10px 10px 0 var(--sunken);
+}
+
+.doc3d-sheet.s1 {
+  transform: translate3d(14px, 14px, -52px) rotate(4deg);
+  opacity: 0.42;
+}
+
+.doc3d-sheet.s2 {
+  transform: translate3d(7px, 7px, -26px) rotate(2deg);
+  opacity: 0.68;
+}
+
+.doc3d-sheet.s3 {
+  padding: 22px 20px;
+  box-shadow: var(--sh-4);
+}
+
+/* Accent band across the face page */
+.doc3d-band {
+  width: 52px;
+  height: 5px;
+  margin-bottom: 16px;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+}
+
+.doc3d-rule {
+  height: 5px;
+  margin-bottom: 9px;
+  border-radius: var(--r-pill);
+  background: var(--sheet-2);
+}
+
+/* Two rules read as "retrieved" - the accent picks out
+   the lines the assistant would actually cite. */
+/* Highlighter, literally. */
+.doc3d-rule.is-hit {
+  background: var(--accent);
+  box-shadow: 2px 2px 0 var(--accent-soft);
+}
+
+.doc3d-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 26px;
+  height: 26px;
+  border-bottom-left-radius: 3px;
+  background: linear-gradient(
+    225deg,
+    var(--sheet-2) 0%,
+    var(--sheet-2) 50%,
+    transparent 50%
+  );
+}
+
+.doc3d-tag {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--sheet-line);
+}
+
+/* -----------------------------------------------------
+   ORBITING NODES
+
+   The "intelligence" half of the object: four nodes on
+   a ring tilted into the document's own 3D space, so
+   the two read as one system rather than a badge
+   pasted onto a picture of paper.
+----------------------------------------------------- */
+
+.doc3d-orbit {
+  position: absolute;
+  top: 124px;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
+  transform-style: preserve-3d;
+  transform: rotateX(74deg);
+  pointer-events: none;
+}
+
+.doc3d-ring {
+  position: absolute;
+  inset: 0;
+  border: 1px dashed var(--steel);
+  border-radius: 50%;
+  opacity: 0.4;
+}
+
+.doc3d-node {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 2px 2px 0 var(--sunken);
+}
+
+/* =====================================================
+   SUGGESTION CARDS
+===================================================== */
+
+.suggest {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+  width: 100%;
+  margin-top: var(--s-6);
+}
+
+@media (max-width: 620px) {
+  .suggest {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.suggest-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 3px solid var(--line-strong);
+  border-radius: var(--r-card);
+  background: var(--raised);
+  box-shadow: var(--sh-2);
+  text-align: left;
+  transition:
+    border-color var(--d-mid) var(--ease-out),
+    box-shadow var(--d-mid) var(--ease-out),
+    background var(--d-mid) var(--ease-out);
+}
+
+.suggest-card:hover:not(:disabled) {
+  background: var(--accent);
+  box-shadow: 7px 7px 0 var(--ink);
+  transform: translate(-3px, -3px);
+}
+
+.suggest-card:disabled {
+  opacity: 0.5;
+}
+
+.suggest-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--line-strong);
+  border-radius: 9px;
+  background: var(--sunken);
+  color: var(--steel-ink);
+  transition:
+    background var(--d-mid) var(--ease-out),
+    color var(--d-mid) var(--ease-out);
+}
+
+.suggest-card:hover:not(:disabled) .suggest-icon {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.suggest-text {
+  min-width: 0;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.suggest-kind {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: 400;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+/* =====================================================
+   INGEST PROGRESS
+
+   Two phases, because the API reports two. "Uploading"
+   covers the POST; "Processing" covers parse, chunk,
+   embed and index, which the backend performs inside
+   that same request and does not report separately.
+   The bar is indeterminate on purpose - a percentage
+   here would be invented.
+===================================================== */
+
+.ingest {
+  padding: var(--s-3);
+  border: 1px solid var(--accent-soft);
+  border-radius: var(--r-card);
+  background: color-mix(in srgb, var(--accent-soft) 20%, var(--raised));
+}
+
+.ingest-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin-bottom: var(--s-2);
+}
+
+.ingest-name {
+  overflow: hidden;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ingest-bar {
+  position: relative;
+  height: 3px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+}
+
+.ingest-fill {
+  position: absolute;
+  inset: 0;
+  width: 42%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  animation: ingest-slide 1.35s var(--ease-in-out) infinite;
+}
+
+@keyframes ingest-slide {
+  0% {
+    transform: translateX(-108%);
+  }
+  100% {
+    transform: translateX(268%);
+  }
+}
+
+.ingest-stages {
+  display: flex;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+.ingest-stage {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.ingest-stage.is-on {
+  color: var(--accent-deep);
+}
+
+.ingest-stage.is-done {
+  color: var(--ok);
+}
+
+/* =====================================================
+   ANSWER ACTIONS
+===================================================== */
+
+.acts {
+  display: flex;
+  align-items: center;
+  gap: var(--s-1);
+  margin-top: var(--s-3);
+}
+
+.act {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  height: 28px;
+  padding: 0 var(--s-2);
+  border-radius: 7px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+  transition:
+    background var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out);
+}
+
+.act:hover {
+  background: var(--accent-wash);
+  color: var(--accent-deep);
+}
+
+.act.is-done {
+  color: var(--ok);
+}
+
+/* -----------------------------------------------------
+   RAIL EXTRAS
+----------------------------------------------------- */
+
+/* Full-bleed hit area so the whole card selects the
+   document, while the remove button stays above it and
+   keeps its own focus stop. */
+.doc-card-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--r-card);
+}
+
+.doc-card-body > *:not(.doc-card-hit) {
+  position: relative;
+  z-index: 2;
+}
+
+.doc-card-live {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: 2px 2px 0 var(--accent-soft);
+}
+
+.rail-empty {
+  padding: var(--s-6) var(--s-3);
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.rail-empty p {
+  margin-top: var(--s-2);
+  font-size: var(--t-sm);
+}
+
+.rail-empty-sub {
+  font-size: var(--t-xs) !important;
+  line-height: 1.5;
+}
+
+.rail-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  width: 100%;
+  min-height: 40px;
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--r-control);
+  background: var(--raised);
+  font-size: var(--t-sm);
+  font-weight: 650;
+  color: var(--ink);
+  transition:
+    border-color var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out),
+    background var(--d-fast) var(--ease-out);
+}
+
+.rail-add:hover:not(:disabled) {
+  border-style: solid;
+  background: var(--accent);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+  transform: translate(-2px, -2px);
+}
+
+.rail-add:disabled {
+  opacity: 0.45;
+}
+
+.send-spin {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(13, 11, 20, 0.3);
+  border-top-color: var(--on-accent);
+  border-radius: 50%;
+}
+
+/* =====================================================
+   EVENT ROW
+
+   A document joining the workspace is an event, not a
+   message - so it gets its own quiet register rather
+   than impersonating something the assistant said.
+===================================================== */
+
+.event {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-bottom: var(--s-5);
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  background: var(--raised);
+  box-shadow: var(--sh-flat);
+}
+
+.event-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.event-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.event-text strong {
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.event-meta {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+}
+
+/* Dot inside the answer badge */
+.mark-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* -----------------------------------------------------
+   INLINE-SPAN FIXES
+
+   These elements are spans inside button/span parents
+   (buttons may not contain block-level children in a
+   way React is happy to nest), so they need an explicit
+   display before width, height and margins apply.
+----------------------------------------------------- */
+
+.ev-page,
+.ev-doc,
+.doc-card-name,
+.doc-card-meta,
+.suggest-text,
+.ingest-name,
+.event-text,
+.brand-name,
+.brand-sub {
+  display: block;
+}
+
+.ev-card-head > span:last-child {
+  display: block;
+  min-width: 0;
+}
+
+/* =====================================================
+   INGEST CINEMATIC
+
+   The only place the dark machine ground takes over the
+   whole screen. Going dark for the duration of ingest is
+   what makes the cream elsewhere read as paper: the
+   product has two materials, not one tint.
+===================================================== */
+
+.cine {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(
+      ellipse 70% 60% at 50% 42%,
+      var(--machine-2) 0%,
+      var(--machine) 68%
+    );
+}
+
+/* Fine machine grid, only visible on the dark ground */
+.cine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(111, 168, 186, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111, 168, 186, 0.06) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: radial-gradient(
+    ellipse 70% 60% at 50% 45%,
+    #000 10%,
+    transparent 72%
+  );
+}
+
+.cine-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cine-hud {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(48px, 12vh, 120px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  width: min(420px, 82vw);
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.cine-file {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: #f4f1ea;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cine-stages {
+  display: flex;
+  gap: var(--s-4);
+}
+
+.cine-stage {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.3);
+  transition: color var(--d-mid) var(--ease-out);
+}
+
+.cine-stage.is-on {
+  color: var(--steel-bright);
+}
+
+.cine-stage.is-on::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px;
+  background: var(--steel-bright);
+  box-shadow: 3px 3px 0 var(--line-strong);
+}
+
+.cine-stage.is-done {
+  color: rgba(244, 241, 234, 0.62);
+}
+
+.cine-read {
+  font-size: var(--t-lg);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #faf8f3;
+}
+
+.cine-counts {
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--steel-bright);
+}
+
+.cine-bar {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: rgba(111, 168, 186, 0.16);
+}
+
+.cine-fill {
+  position: absolute;
+  inset: 0;
+  width: 34%;
+  border-radius: var(--r-pill);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--steel-bright),
+    transparent
+  );
+  animation: cine-sweep 1.5s var(--ease-in-out) infinite;
+}
+
+/* The hold reads differently from the run: slower, and
+   it never pretends to advance. */
+.cine-fill.is-hold {
+  animation-duration: 2.6s;
+  opacity: 0.7;
+}
+
+@keyframes cine-sweep {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+/* =====================================================
+   REASONING LATTICE
+
+   Replaces the three bouncing dots. Nodes fire in a
+   travelling wave, so "thinking" reads as a system
+   working through something rather than a generic
+   placeholder.
+===================================================== */
+
+.lattice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: var(--s-2) 0;
+}
+
+.lattice-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 6px);
+  grid-auto-rows: 6px;
+  gap: 4px;
+}
+
+.lattice-node {
+  width: 6px;
+  height: 6px;
+  border-radius: 1.5px;
+  background: var(--line-strong);
+  animation: lattice-fire 2.1s var(--ease-in-out) infinite;
+}
+
+.lattice-node {
+  background: color-mix(in srgb, var(--steel) 62%, var(--line-strong));
+}
+
+/* The chunks currently under consideration. */
+.lattice-node.is-hot {
+  background: var(--accent);
+}
+
+@keyframes lattice-fire {
+  0%,
+  72%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  36% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+.lattice-label {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--steel-ink);
+}
+
+/* -----------------------------------------------------
+   INDEX PLANE
+
+   Sits under the hero document on the same 3D body, so
+   the two rotate together. Warm cells are the pages an
+   answer would cite; cool cells are the rest of the
+   index. The product's thesis, stated while idle.
+----------------------------------------------------- */
+
+.doc3d-plane {
+  position: absolute;
+  top: 250px;
+  left: 50%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 13px;
+  width: 372px;
+  margin-left: -186px;
+  transform: rotateX(66deg) translateZ(-34px);
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.doc3d-cell {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--steel);
+  opacity: 0.55;
+}
+
+.doc3d-cell.is-hit {
+  width: 5px;
+  height: 5px;
+  margin: -0.5px;
+  background: var(--accent);
+  opacity: 1;
+  box-shadow: 2px 2px 0 var(--accent-soft);
+}
+
+/* The sheet's shadow on the index plane - what ties the
+   two surfaces together as one object. */
+.doc3d-plane::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 190px;
+  height: 84px;
+  margin-left: -95px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse,
+    rgba(0, 0, 0, 0.55) 0%,
+    transparent 68%
+  );
+}
+
+/* -----------------------------------------------------
+   METADATA REGISTERS
+
+   Page count is a property of the document (warm-neutral
+   ink). Chunk count is a property of the index the
+   machine built (steel). Splitting them is small, but it
+   is the rule the whole interface runs on.
+----------------------------------------------------- */
+
+.doc-card-meta,
+.event-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: 0.04em;
+  color: var(--ink-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.meta-sep {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--line-strong);
+}
+
+.meta-chunks {
+  color: var(--steel-ink);
+}
+
+/* -----------------------------------------------------
+   INDEX STRIP
+
+   Only on the active document. Ticks stand for chunk
+   density across the file - the machine's view of the
+   document, sitting under the document's own name.
+----------------------------------------------------- */
+
+.doc-card.is-active .doc-card-body {
+  padding-bottom: calc(var(--s-3) + 9px);
+}
+
+.doc-card.is-active .doc-card-body::after {
+  content: "";
+  position: absolute;
+  right: var(--s-3);
+  bottom: 9px;
+  left: calc(var(--s-3) + 6px);
+  height: 4px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--ink) 0 3px,
+    transparent 3px 6px
+  );
+  opacity: 0.85;
+  animation: index-settle 620ms var(--ease-out) both;
+}
+
+@keyframes index-settle {
+  from {
+    opacity: 0;
+    transform: scaleX(0.2);
+    transform-origin: left center;
+  }
+  to {
+    opacity: 0.42;
+    transform: scaleX(1);
+  }
+}
+
+/* -----------------------------------------------------
+   EVIDENCE: machine rank, document content
+----------------------------------------------------- */
+
+.ev-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Steel edge marks this as a machine-ranked result; the
+   card's contents stay warm because they are the page. */
+.ev-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--steel);
+  opacity: 0;
+  transition: opacity var(--d-mid) var(--ease-out);
+}
+
+.ev-card:hover::before {
+  opacity: 0.4;
+}
+
+.ev-card.is-on::before {
+  background: var(--accent);
+  opacity: 1;
+}
+
+/* -----------------------------------------------------
+   COMMAND BAR: document context chip
+----------------------------------------------------- */
+
+.cmd-doc {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cmd-doc-dot {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.cmd-doc.is-empty .cmd-doc-dot {
+  background: var(--line-strong);
+}
+
+/* -----------------------------------------------------
+   PARTICLE FIELD
+
+   Behind the stage, in front of the desk grid, under all
+   content. Masked so it fades out before it reaches the
+   text - the field is atmosphere, and it must never
+   compete with an answer.
+----------------------------------------------------- */
+
+.field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+
+  /* Vertical fall-off, not a centre spotlight: the field
+     should breathe in the upper stage and get out of the
+     way by the time the reading column and the command
+     bar begin. A radial mask centred on the content did
+     exactly the opposite. */
+  mask-image: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 34%,
+    rgba(0, 0, 0, 0.45) 62%,
+    transparent 92%
+  );
+}
+
+/* -----------------------------------------------------
+   CITED PAGES
+
+   Replaces the per-turn stepper, the chunk funnel and the
+   page-tick column with one line that does the job all
+   three were circling: which pages this answer stands on,
+   clickable straight into the evidence panel.
+----------------------------------------------------- */
+
+.cited {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-left: var(--s-2);
+  padding-left: var(--s-3);
+  border-left: 1px solid var(--line);
+}
+
+.cited-label {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+
+.cited-chip {
+  padding: 2px 7px;
+  border: 2px solid var(--ink);
+  background: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background var(--d-fast) var(--ease-out),
+    border-color var(--d-fast) var(--ease-out),
+    color var(--d-fast) var(--ease-out);
+}
+
+.cited-chip:hover,
+.cited-chip.is-on {
+  background: var(--ink);
+  color: var(--accent);
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.acts {
+  flex-wrap: wrap;
+}
+
+/* =====================================================
+   MAXIMALIST LAYER
+
+   Brutalism gives the structure; this gives the volume.
+   Diagonal hatch, hard rules and blocked labels, applied
+   to the frame of the interface rather than to the
+   reading surface - an answer still has to be readable.
+===================================================== */
+
+/* Hatched band - the ornament that recurs across heads */
+.rail-head,
+.evidence-head {
+  border-bottom: 3px solid var(--line-strong);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--line-soft) 0 3px,
+    transparent 3px 7px
+  );
+}
+
+.rail-head .label,
+.evidence-head .label {
+  padding: 2px 6px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+}
+
+.rail-head .label.tnum,
+.evidence-head .label.tnum {
+  background: var(--steel);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Structural separators, not hairlines */
+.topbar {
+  border-bottom: 3px solid var(--line-strong);
+}
+
+.rail {
+  border-right: 3px solid var(--line-strong);
+}
+
+.evidence {
+  border-left: 3px solid var(--line-strong);
+}
+
+.rail-foot {
+  border-top: 3px solid var(--line-strong);
+}
+
+/* Blocked metadata labels - loud, square, unmissable */
+.answer-name {
+  padding: 1px 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: var(--t-xs);
+}
+
+.cited-label {
+  padding: 2px 6px;
+  background: var(--steel);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.question-label {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 2px solid var(--line-strong);
+  color: var(--ink-3);
+}
+
+/* Halftone on the raised slabs */
+.suggest-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(
+    var(--line-soft) 1px,
+    transparent 1px
+  );
+  background-size: 7px 7px;
+  opacity: 0.55;
+}
+
+.suggest-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Hero sits on a hard rule */
+.hero-title {
+  padding-bottom: var(--s-3);
+  border-bottom: 5px solid var(--accent);
+}
+
+/* Table headers become blocks */
+.md th {
+  background: var(--steel);
+  color: #ffffff;
+  font-weight: 500;
+}

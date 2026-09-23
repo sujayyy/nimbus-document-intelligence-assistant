@@ -4,6 +4,7 @@ from app.config import settings
 from app.ingestion.chunker import TokenChunker
 from app.ingestion.embedder import Embedder
 from app.ingestion.parser import PDFParser
+from app.retrieval.query_preprocessor import detect_subject_entity
 from app.retrieval.vector_store import FAISSVectorStore
 
 
@@ -61,7 +62,17 @@ class IngestionPipeline:
             f"{embeddings.shape[1]}."
         )
 
-        print("4. Building FAISS index...")
+        # Terms too common in this document to discriminate between
+        # chunks. Stripped from queries before embedding; see
+        # query_preprocessor for the measurements behind this.
+        subject_entities = detect_subject_entity(pages)
+
+        print(
+            f"4. Subject entities: "
+            f"{subject_entities or 'none detected'}"
+        )
+
+        print("5. Building FAISS index...")
 
         index_directory = (
             settings.indexes_dir / document_id
@@ -74,13 +85,15 @@ class IngestionPipeline:
         vector_store.build(
             embeddings=embeddings,
             chunks=chunks,
+            subject_entities=subject_entities,
         )
 
-        print("5. Index saved.")
+        print("6. Index saved.")
 
         return {
             "document_id": document_id,
             "pages": len(pages),
             "chunks": len(chunks),
             "embedding_dimension": embeddings.shape[1],
+            "subject_entities": subject_entities,
         }

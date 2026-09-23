@@ -1,0 +1,186 @@
+/* =====================================================
+   NIMBUS  -  BRUTALISM
+
+   The canonical web-brutalist palette: black, white and
+   flat primaries. Nothing is tinted, nothing is blurred,
+   nothing is soft.
+
+     BLACK   #000000   ink, borders, shadows
+     WHITE   #FFFFFF   paper
+     YELLOW  #FFE500   document / evidence
+     BLUE    #0025FF   machine / index
+     RED     #FF3B30   error only
+
+   The semantic split carries over from every previous
+   identity, and yellow improves it: a highlighter really
+   is yellow, so citations, cited pages and the pages an
+   answer leaned on all wear it. Blue belongs to the
+   pipeline - retrieval, the index, processing.
+
+   Saturated yellow cannot be text on white (1.3:1), so
+   it is only ever a FILL with black on top. That single
+   rule keeps the palette loud and still readable.
+===================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* --- Ground ------------------------------------- */
+
+  --paper: #f2f2ec;
+  --surface: #ffffff;
+  --raised: #ffffff;
+  --sunken: #e4e4dc;
+
+  /* Document surfaces are pure white against the
+     off-white desk, so a page still reads as an object. */
+  --sheet: #ffffff;
+  --sheet-2: #e4e4dc;
+  --sheet-line: #000000;
+
+  /* --- Ink ---------------------------------------- */
+
+  --ink: #000000;
+  --ink-2: #1a1a1a;
+  --ink-3: #4d4d4d;
+  --ink-4: #6b6b6b;
+
+  /* --- Line ----------------------------------------
+
+     Black, and thick. In brutalism the border is the
+     design - it is not a hairline separating things, it
+     is the edge of a slab. */
+
+  --line: #000000;
+  --line-soft: #c9c9c1;
+  --line-strong: #000000;
+
+  /* --- Accent: DOCUMENT / EVIDENCE (yellow) ------- */
+
+  --accent: #ffe500;
+  --accent-deep: #806f00;
+  --accent-soft: #fff7a8;
+  --accent-wash: rgba(255, 229, 0, 0.3);
+  --accent-glow: rgba(255, 229, 0, 0.5);
+  --on-accent: #000000;
+
+  /* --- Machine (blue) ----------------------------- */
+
+  --machine: #000000;
+  --machine-2: #12121a;
+  --machine-line: #2a2a3a;
+
+  --steel: #0025ff;
+  --steel-ink: #0025ff;
+  --steel-bright: #5c74ff;
+  --steel-wash: rgba(0, 37, 255, 0.12);
+  --steel-glow: rgba(0, 37, 255, 0.35);
+  --on-steel: #ffffff;
+
+  --cyan: #00e1ff;
+  --cyan-wash: rgba(0, 225, 255, 0.16);
+
+  /* --- System states ------------------------------ */
+
+  /* Both cleared 4.5:1 against the off-white desk, which
+     is the harder of the two grounds they appear on. */
+  --gold: #ffe500;
+  --ok: #007f2f;
+  --ok-wash: rgba(0, 127, 47, 0.14);
+  --info: #0025ff;
+  --info-wash: rgba(0, 37, 255, 0.12);
+  --danger: #cf2f26;
+  --danger-wash: rgba(207, 47, 38, 0.14);
+
+  /* --- Type ----------------------------------------
+
+     Heavy and tight. Brutalism sets type at 700+. */
+
+  --font-ui:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+
+  --font-mono:
+    "DM Mono", ui-monospace, "SF Mono", "Menlo", monospace;
+
+  --t-xs: 0.688rem;
+  --t-sm: 0.781rem;
+  --t-base: 0.875rem;
+  --t-md: 0.938rem;
+  --t-lg: 1.125rem;
+  --t-xl: 1.625rem;
+  --t-2xl: 2.25rem;
+  --t-3xl: 3.25rem;
+
+  --lh-tight: 1.02;
+  --lh-snug: 1.32;
+  --lh-body: 1.6;
+
+  --label-size: 0.625rem;
+  --label-track: 0.14em;
+
+  /* --- Space -------------------------------------- */
+
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+
+  /* --- Icon sizing -------------------------------- */
+
+  --icon-sm: 14px;
+  --icon-md: 17px;
+  --icon-lg: 22px;
+
+  /* --- Radius --------------------------------------
+
+     Square. The database entry for this style is explicit
+     about it, and it is the fastest way to read as
+     brutalist rather than as a rounded app wearing bright
+     colours. */
+
+  --r-sheet: 0px;
+  --r-card: 0px;
+  --r-control: 0px;
+  --r-pill: 0px;
+
+  /* --- Depth ---------------------------------------
+
+     Hard black offset blocks. No blur exists in this
+     system at all. */
+
+  --sh-flat: 2px 2px 0 var(--ink);
+  --sh-1: 3px 3px 0 var(--ink);
+  --sh-2: 4px 4px 0 var(--ink);
+  --sh-3: 6px 6px 0 var(--ink);
+  --sh-4: 10px 10px 0 var(--ink);
+
+  --sh-accent: 4px 4px 0 var(--ink);
+  --sh-steel: 4px 4px 0 var(--ink);
+
+  /* --- Motion --------------------------------------
+
+     The style guide says "no smooth transitions". Taken
+     literally that kills the animation work, so the
+     compromise is: state changes snap, movement springs.
+     Colour and border changes are instant; things that
+     physically move still travel. */
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --d-fast: 0ms;
+  --d-mid: 140ms;
+  --d-slow: 320ms;
+
+  /* --- Layout ------------------------------------- */
+
+  --rail-w: 264px;
+  --evidence-w: 324px;
+  --reading-w: 68ch;
+  --topbar-h: 58px;
+}
